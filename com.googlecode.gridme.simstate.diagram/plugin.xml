@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension point="org.eclipse.team.core.fileTypes">
+      <?gmfgen generated="true"?>
+      <fileTypes
+         type="text"
+         extension="simstate">
+      </fileTypes>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <?gmfgen generated="true"?>
+      <parser
+         type="simstate"
+         class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
+      </parser>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <?gmfgen generated="true"?>
+      <editor
+         id="statemachine.diagram.part.StatemachineDiagramEditorID"
+         name="%editorName"
+         icon="icons/obj16/StatemachineDiagramFile.gif"
+         extensions="simstate"
+         default="true"
+         class="statemachine.diagram.part.StatemachineDiagramEditor"
+         matchingStrategy="statemachine.diagram.part.StatemachineMatchingStrategy"
+         contributorClass="statemachine.diagram.part.StatemachineDiagramActionBarContributor">
+      </editor>
+   </extension>
+   
+   <extension point="org.eclipse.ui.contexts">
+      <?gmfgen generated="true"?>
+      <context
+         description="%context.description"
+         id="statemachine.diagram.ui.diagramContext"
+         name="%context.name"
+         parentId="org.eclipse.gmf.runtime.diagram.ui.diagramContext">
+      </context>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <?gmfgen generated="true"?>
+  	  <wizard
+  	     name="%newWizardName"
+  	     icon="icons/obj16/StatemachineDiagramFile.gif"
+  	     category="com.googlecode.gridme.wizards"
+  	     class="statemachine.diagram.part.StatemachineCreationWizard"
+  	     id="statemachine.diagram.part.StatemachineCreationWizardID">
+  	  	 <description>%newWizardDesc</description>  
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.popupMenus">
+      <?gmfgen generated="true"?>
+      <objectContribution
+            adaptable="false"
+            id="com.googlecode.gridme.simstate.diagram.LoadResource"
+            objectClass="statemachine.diagram.edit.parts.GStatemachineEditPart">
+         <action
+               class="statemachine.diagram.part.StatemachineLoadResourceAction"
+               enablesFor="1"
+               id="com.googlecode.gridme.simstate.diagram.LoadResourceAction"
+               label="%loadResourceActionLabel"
+               menubarPath="additions">
+         </action>
+      </objectContribution>           
+   </extension>
+
+   <extension point="org.eclipse.ui.popupMenus">
+      <?gmfgen generated="true"?>
+      <objectContribution
+            id="com.googlecode.gridme.simstate.diagram.InitDiagram"
+            nameFilter="*.statemachine"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               label="%initDiagramActionLabel"
+               class="statemachine.diagram.part.StatemachineInitDiagramFileAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="com.googlecode.gridme.simstate.diagram.InitDiagramAction">
+         </action>
+      </objectContribution>
+   </extension>
+	
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders">
+      <?gmfgen generated="true"?>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider"
+         id="StatemachinePresentation">
+         <Priority name="Lowest"/>
+         <ViewId id="statemachine.diagram.part.StatemachineDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="delete"/>
+            </ElementType>
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
+               <GlobalActionId actionId="save"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.DiagramIDEGlobalActionHandlerProvider"
+         id="StatemachinePresentationIDE">
+         <Priority name="Lowest"/>
+         <ViewId id="statemachine.diagram.part.StatemachineDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="bookmark"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.render.providers.DiagramUIRenderGlobalActionHandlerProvider"
+            id="StatemachineRender">
+         <Priority name="Lowest"/>
+         <ViewId id="statemachine.diagram.part.StatemachineDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="cut"/>
+               <GlobalActionId actionId="copy"/>
+               <GlobalActionId actionId="paste"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <?gmfgen generated="true"?>
+      <contributionItemProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContributionItemProvider"
+            checkPluginLoaded="false">
+         <Priority name="Low"/>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="statemachine.diagram.edit.parts.TransitionNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+            <popupPredefinedItem id="deleteFromModelAction" remove="true"/>
+         </popupContribution>
+      </contributionItemProvider>
+   </extension>
+
+   <extension id="ValidationContributionItemProvider" name="Validation"
+      point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <?gmfgen generated="true"?>
+      <contributionItemProvider
+         class="statemachine.diagram.providers.StatemachineValidationProvider">
+         <Priority name="Low"/>
+         <partContribution id="statemachine.diagram.part.StatemachineDiagramEditorID">
+            <partMenuGroup menubarPath="/diagramMenu/" id="validationGroup"/>
+            <partAction id="validateAction" menubarPath="/diagramMenu/validationGroup"/>
+         </partContribution>
+      </contributionItemProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders">
+      <?gmfgen generated="true"?>
+      <MarkerNavigationProvider class="statemachine.diagram.providers.StatemachineMarkerNavigationProvider">
+         <MarkerType name="com.googlecode.gridme.simstate.diagram.diagnostic"/>
+         <Priority name="Lowest"/>
+      </MarkerNavigationProvider>
+   </extension>
+
+   <extension id="diagnostic" name="Statemachine Plugin problems" point="org.eclipse.core.resources.markers">
+      <?gmfgen generated="true"?>
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
+      <persistent value="true"/>
+   </extension>   
+
+   <extension id="validationDecoratorProvider" name="ValidationDecorations" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <?gmfgen generated="true"?>
+      <decoratorProvider class="statemachine.diagram.providers.StatemachineValidationDecoratorProvider">
+         <Priority name="Lowest"/>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW"/>
+         <context decoratorTargets="PRIMARY_VIEW"/>
+      </decoratorProvider>
+   </extension>
+
+   <extension point="org.eclipse.core.runtime.preferences">
+      <?gmfgen generated="true"?>
+      <initializer class="statemachine.diagram.preferences.DiagramPreferenceInitializer"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.preferencePages">
+      <?gmfgen generated="true"?>
+      <page
+            id="com.googlecode.gridme.simstate.diagram.general"
+            name="%preference.page.title.com.googlecode.gridme.simstate.diagram.general"
+            class="statemachine.diagram.preferences.DiagramGeneralPreferencePage">
+      </page>
+      <page
+            id="com.googlecode.gridme.simstate.diagram.appearance"
+            name="%preference.page.title.com.googlecode.gridme.simstate.diagram.appearance"
+            category="com.googlecode.gridme.simstate.diagram.general"
+            class="statemachine.diagram.preferences.DiagramAppearancePreferencePage">
+      </page>
+      <page
+            id="com.googlecode.gridme.simstate.diagram.connections"
+            name="%preference.page.title.com.googlecode.gridme.simstate.diagram.connections"
+            category="com.googlecode.gridme.simstate.diagram.general"
+            class="statemachine.diagram.preferences.DiagramConnectionsPreferencePage">
+      </page>
+      <page
+            id="com.googlecode.gridme.simstate.diagram.printing"
+            name="%preference.page.title.com.googlecode.gridme.simstate.diagram.printing"
+            category="com.googlecode.gridme.simstate.diagram.general"
+            class="statemachine.diagram.preferences.DiagramPrintingPreferencePage">
+      </page>
+      <page
+            id="com.googlecode.gridme.simstate.diagram.rulersAndGrid"
+            name="%preference.page.title.com.googlecode.gridme.simstate.diagram.rulersAndGrid"
+            category="com.googlecode.gridme.simstate.diagram.general"
+            class="statemachine.diagram.preferences.DiagramRulersAndGridPreferencePage">
+      </page>
+      <page
+            id="com.googlecode.gridme.simstate.diagram.pathmaps"
+            name="%preference.page.title.com.googlecode.gridme.simstate.diagram.pathmaps"
+            category="com.googlecode.gridme.simstate.diagram.general"
+            class="org.eclipse.gmf.runtime.emf.ui.preferences.PathmapsPreferencePage">
+      </page>
+   </extension>
+
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <?gmfgen generated="true"?>
+      <propertyContributor
+            contributorId="com.googlecode.gridme.simstate.diagram"
+            labelProvider="statemachine.diagram.sheet.StatemachineSheetLabelProvider">
+         <propertyCategory category="domain"/>
+         <propertyCategory category="visual"/>
+         <propertyCategory category="extra"/>
+      </propertyContributor>
+   </extension>
+
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <?gmfgen generated="true"?>   
+      <propertyTabs contributorId="com.googlecode.gridme.simstate.diagram">
+         <propertyTab
+             category="visual"
+             id="property.tab.AppearancePropertySection"
+             label="%tab.appearance"/>
+          <propertyTab
+             category="visual"
+             id="property.tab.DiagramPropertySection"
+             label="%tab.diagram"/>
+          <propertyTab
+             category="domain"
+             id="property.tab.domain"
+             label="%tab.domain"/>
+      </propertyTabs>
+   </extension>
+
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <?gmfgen generated="true"?>   
+      <propertySections contributorId="com.googlecode.gridme.simstate.diagram">
+         <propertySection id="property.section.ConnectorAppearancePropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ConnectionEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ConnectionAppearancePropertySection" 
+            tab="property.tab.AppearancePropertySection">
+         </propertySection>
+         <propertySection id="property.section.ShapeColorAndFontPropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.ShapeEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.ShapeColorsAndFontsPropertySection" 
+            tab="property.tab.AppearancePropertySection">
+         </propertySection> 
+         <propertySection id="property.section.DiagramColorsAndFontsPropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.DiagramEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.appearance.DiagramColorsAndFontsPropertySection" 
+            tab="property.tab.AppearancePropertySection">
+         </propertySection>     
+         <propertySection id="property.section.RulerGridPropertySection" 
+            filter="org.eclipse.gmf.runtime.diagram.ui.properties.filters.DiagramEditPartPropertySectionFilter" 
+            class="org.eclipse.gmf.runtime.diagram.ui.properties.sections.grid.RulerGridPropertySection" 
+            tab="property.tab.DiagramPropertySection">
+         </propertySection>     
+         <propertySection
+            id="property.section.domain" 
+            tab="property.tab.domain"
+            class="statemachine.diagram.sheet.StatemachinePropertySection">
+            <input type="org.eclipse.gmf.runtime.notation.View"/>
+            <input type="org.eclipse.gef.EditPart"/>
+            <input type="statemachine.diagram.navigator.StatemachineAbstractNavigatorItem"/>
+         </propertySection>
+      </propertySections>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
+      <?gmfgen generated="true"?>
+      <viewProvider class="statemachine.diagram.providers.StatemachineViewProvider">
+         <Priority name="Lowest"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="Statemachine"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints=""/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints=""/>
+      </viewProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
+      <?gmfgen generated="true"?>
+      <editpartProvider class="statemachine.diagram.providers.StatemachineEditPartProvider">
+         <Priority name="Lowest"/>
+      </editpartProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.ui.modelingAssistantProviders">
+      <?gmfgen generated="true"?>
+      <modelingAssistantProvider class="statemachine.diagram.providers.StatemachineModelingAssistantProvider">
+         <Priority name="Lowest"/>
+      </modelingAssistantProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.iconProviders">
+      <?gmfgen generated="true"?>
+      <IconProvider class="statemachine.diagram.providers.StatemachineIconProvider">
+         <Priority name="Low"/>
+      </IconProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.parserProviders">
+      <?gmfgen generated="true"?>
+      <ParserProvider class="statemachine.diagram.providers.StatemachineParserProvider">
+         <Priority name="Lowest"/>
+      </ParserProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+      <?gmfgen generated="true"?>
+      <metamodel nsURI="http://example.org/statemachine">
+         <metamodelType
+               id="com.googlecode.gridme.simstate.diagram.GStatemachine_79"
+               name="%metatype.name.GStatemachine_79"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="GStatemachine"
+               edithelper="statemachine.diagram.edit.helpers.GStatemachineEditHelper">
+            <param name="semanticHint" value="79"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://example.org/statemachine">
+         <metamodelType
+               id="com.googlecode.gridme.simstate.diagram.GState_1001"
+               name="%metatype.name.GState_1001"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="GState"
+               edithelper="statemachine.diagram.edit.helpers.GStateEditHelper">
+            <param name="semanticHint" value="1001"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://example.org/statemachine">
+         <metamodelType
+               id="com.googlecode.gridme.simstate.diagram.GStartState_1002"
+               name="%metatype.name.GStartState_1002"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="GStartState"
+               edithelper="statemachine.diagram.edit.helpers.GStartStateEditHelper">
+            <param name="semanticHint" value="1002"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://example.org/statemachine">
+         <metamodelType
+               id="com.googlecode.gridme.simstate.diagram.GStopState_1003"
+               name="%metatype.name.GStopState_1003"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="GStopState"
+               edithelper="statemachine.diagram.edit.helpers.GStopStateEditHelper">
+            <param name="semanticHint" value="1003"/>
+         </metamodelType>
+      </metamodel>
+      <metamodel nsURI="http://example.org/statemachine">
+         <metamodelType
+               id="com.googlecode.gridme.simstate.diagram.Transition_3001"
+               name="%metatype.name.Transition_3001"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Transition"
+               edithelper="statemachine.diagram.edit.helpers.TransitionEditHelper">
+            <param name="semanticHint" value="3001"/>
+         </metamodelType>
+      </metamodel>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+      <?gmfgen generated="true"?>
+      <clientContext id="StatemachineClientContext">
+         <enablement>
+            <test
+               property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+               value="com.googlecode.gridme.simstate.diagram.EditingDomain"/>
+         </enablement>
+      </clientContext> 
+      <binding context="StatemachineClientContext">
+         <elementType ref="com.googlecode.gridme.simstate.diagram.GStatemachine_79"/>
+         <elementType ref="com.googlecode.gridme.simstate.diagram.GState_1001"/>
+         <elementType ref="com.googlecode.gridme.simstate.diagram.GStartState_1002"/>
+         <elementType ref="com.googlecode.gridme.simstate.diagram.GStopState_1003"/>
+         <elementType ref="com.googlecode.gridme.simstate.diagram.Transition_3001"/>
+         <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+      </binding>
+   </extension>
+	   <extension point="org.eclipse.core.expressions.propertyTesters">
+      <?gmfgen generated="true"?>
+       <propertyTester
+           id="com.googlecode.gridme.simstate.diagram.URIEditorInputPropertyTester"
+           type="org.eclipse.emf.common.ui.URIEditorInput"
+           namespace="com.googlecode.gridme.simstate.diagram"
+           properties="isURIEditorInput"
+           class="statemachine.diagram.part.StatemachineUriEditorInputTester">
+       </propertyTester>
+   </extension>
+
+	   <extension point="org.eclipse.core.expressions.propertyTesters">
+      <?gmfgen generated="true"?>
+       <propertyTester
+           id="com.googlecode.gridme.simstate.diagram.DomainModelElementPropertyTester"
+           type="org.eclipse.emf.ecore.EObject"
+           namespace="com.googlecode.gridme.simstate.diagram"
+           properties="isDomainModelElement"
+           class="statemachine.diagram.part.StatemachineDomainModelElementTester">
+       </propertyTester>
+   </extension>
+
+	   <extension point="org.eclipse.ui.navigator.viewer">
+      <?gmfgen generated="true"?>
+      <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <contentExtension pattern="com.googlecode.gridme.simstate.diagram.resourceContent"/>
+			<contentExtension pattern="com.googlecode.gridme.simstate.diagram.domainResourceContent"/>
+            <contentExtension pattern="com.googlecode.gridme.simstate.diagram.navigatorLinkHelper"/>
+         </includes>
+      </viewerContentBinding>
+      <viewerActionBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+         <includes>
+            <actionExtension pattern="com.googlecode.gridme.simstate.diagram.navigatorActionProvider"/>
+         </includes>
+      </viewerActionBinding>
+   </extension>
+
+   <extension point="org.eclipse.ui.navigator.navigatorContent">
+      <?gmfgen generated="true"?>
+      <navigatorContent
+            id="com.googlecode.gridme.simstate.diagram.resourceContent" 
+            name="%navigatorContentName" 
+            priority="normal" 
+            contentProvider="statemachine.diagram.navigator.StatemachineNavigatorContentProvider" 
+            labelProvider="statemachine.diagram.navigator.StatemachineNavigatorLabelProvider"
+            icon="icons/obj16/StatemachineDiagramFile.gif"
+            activeByDefault="true">
+         <triggerPoints>
+            <or>
+	           <and>
+    	          <instanceof value="org.eclipse.core.resources.IFile"/>
+        	      <test property="org.eclipse.core.resources.extension" value="simstate"/>
+               </and>
+               <instanceof value="statemachine.diagram.navigator.StatemachineAbstractNavigatorItem"/>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+         	   <instanceof value="statemachine.diagram.navigator.StatemachineAbstractNavigatorItem"/>
+            </or>
+         </possibleChildren>
+         <commonSorter 
+               id="com.googlecode.gridme.simstate.diagram.navigatorSorter" 
+               class="statemachine.diagram.navigator.StatemachineNavigatorSorter">
+            <parentExpression>
+               <or>
+	              <and>
+    	             <instanceof value="org.eclipse.core.resources.IFile"/>
+        	         <test property="org.eclipse.core.resources.extension" value="simstate"/>
+                  </and>
+                  <instanceof value="statemachine.diagram.navigator.StatemachineAbstractNavigatorItem"/>
+               </or>
+            </parentExpression>
+         </commonSorter>
+      </navigatorContent>
+      <navigatorContent
+            id="com.googlecode.gridme.simstate.diagram.domainResourceContent" 
+            name="%domainNavigatorContentName" 
+            priority="normal" 
+            contentProvider="statemachine.diagram.navigator.StatemachineDomainNavigatorContentProvider" 
+            labelProvider="statemachine.diagram.navigator.StatemachineDomainNavigatorLabelProvider"
+            icon="icons/obj16/StatemachineDiagramFile.gif"
+            activeByDefault="true">
+         <triggerPoints>
+            <or>
+	           <and>
+    	          <instanceof value="org.eclipse.core.resources.IFile"/>
+        	      <test property="org.eclipse.core.resources.extension" value="statemachine"/>
+               </and>
+               <and>
+                  <instanceof value="org.eclipse.emf.ecore.EObject"/>
+                  <test property="com.googlecode.gridme.simstate.diagram.isDomainModelElement"/>
+               </and>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <and>
+       	       <instanceof value="org.eclipse.emf.ecore.EObject"/>
+       	       <test property="com.googlecode.gridme.simstate.diagram.isDomainModelElement"/>
+       	    </and>
+         </possibleChildren>
+      </navigatorContent>
+      <actionProvider
+            id="com.googlecode.gridme.simstate.diagram.navigatorActionProvider"
+            class="statemachine.diagram.navigator.StatemachineNavigatorActionProvider">
+         <enablement>
+            <or>
+               <instanceof value="statemachine.diagram.navigator.StatemachineAbstractNavigatorItem"/>
+            </or>
+         </enablement>
+      </actionProvider>
+   </extension>
+   
+	   <extension point="org.eclipse.ui.navigator.linkHelper">
+      <?gmfgen generated="true"?>
+      <linkHelper
+            id="com.googlecode.gridme.simstate.diagram.navigatorLinkHelper"
+            class="statemachine.diagram.navigator.StatemachineNavigatorLinkHelper">
+         <editorInputEnablement>
+            <and>
+               <instanceof value="org.eclipse.emf.common.ui.URIEditorInput"/>
+               <test property="com.googlecode.gridme.simstate.diagram.isURIEditorInput"/>
+            </and>
+         </editorInputEnablement>
+         <selectionEnablement>
+            <instanceof value="statemachine.diagram.navigator.StatemachineAbstractNavigatorItem"/>
+         </selectionEnablement>
+      </linkHelper>
+   </extension>
+   <extension point="org.eclipse.ui.commands">
+      <?gmfgen generated="true"?>
+      <command
+         categoryId="org.eclipse.ui.category.edit"
+         defaultHandler="statemachine.diagram.part.StatemachineDiagramUpdateCommand"
+         description="%update.diagram.description"
+         id="statemachine.diagram.updateDiagram"
+         name="%update.diagram.name"/>
+   </extension>
+   
+   <extension point="org.eclipse.ui.bindings">
+      <?gmfgen generated="true"?>
+      <key 
+         commandId="statemachine.diagram.updateDiagram"
+         contextId="statemachine.diagram.ui.diagramContext"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+         sequence="F5"/>
+   </extension>
+</plugin>

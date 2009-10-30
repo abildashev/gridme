@@ -1,0 +1,21 @@
+<!-- Pack compiled sources into jar -->
+<project name="simstate" default="jar" basedir=".">
+  <property name="lib.gen" value="lib-gen" />
+  <property name="jar" value="simstate.jar" />
+  <!-- default eclipse classes location -->
+  <property name="build" value="bin" />
+
+  <target name="clean">
+    <delete dir="${lib.gen}" />
+  </target>
+
+  <target name="prepare">
+    <mkdir dir="${lib.gen}" />
+  </target>
+
+  <target name="jar" depends="prepare">
+    <jar jarfile="${lib.gen}/${jar}" 
+      	 basedir="${build}"
+    	 includes="**/*.class"/>
+  </target>
+</project>

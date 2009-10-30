@@ -1,0 +1,51 @@
+<!--
+Copyright (c) 2008 Dmitry Grushin <dgrushin@gmail.com>.
+ 
+This file is part of GridMe.
+ 
+GridMe is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+ 
+GridMe is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
+ 
+Contributors:
+  Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
+-->
+<workflow>
+	<component class="org.openarchitectureware.emf.XmiReader">
+		<metaModelFile value="metamodel/statemachine.ecore" />
+		<modelFile value="${model}" />
+		<outputSlot value="model" />
+		<firstElementOnly value="true" />
+	</component>
+
+	<component class="org.openarchitectureware.check.CheckComponent">
+		<metaModel
+			class="org.openarchitectureware.type.emf.EmfMetaModel"
+			useSingleGlobalResourceSet="true">
+			<metaModelFile value="metamodel/statemachine.ecore" />
+		</metaModel>
+		<checkFile value="constraints::errors" />
+		<expression value="model.eAllContents.add(model)" />
+	</component>
+
+	<component class="org.openarchitectureware.xpand2.Generator">
+		<fileEncoding value="ISO-8859-1"/>
+		<metaModel
+			class="org.openarchitectureware.type.emf.EmfMetaModel">
+			<metaModelFile value="metamodel/statemachine.ecore" />
+		</metaModel>
+		<expand value="templates::Runtime::Statemachine FOR model" />
+		<genPath value="${src-gen}" />
+		<beautifier
+			class="org.openarchitectureware.xpand2.output.JavaBeautifier" />
+	</component>
+</workflow>

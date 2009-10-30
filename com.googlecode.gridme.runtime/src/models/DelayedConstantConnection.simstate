@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.googlecode.gridme.simstate.statemachine="http://example.org/statemachine" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <com.googlecode.gridme.simstate.statemachine:GStatemachine xmi:id="_Wh_pANRdEdyDX5F2MJWAkw" name="DelayedConstantConnection" package="com.googlecode.gridme.runtime.elements">
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStartState" xmi:id="_ZkX04NRdEdyDX5F2MJWAkw"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStopState" xmi:id="_Z2nbcNRdEdyDX5F2MJWAkw"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_aIgcsNRdEdyDX5F2MJWAkw" name="Idle"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_JEdg8NQdEdyvA5N7PsT66w" name="Transmit">
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_lPsAkNQdEdyvA5N7PsT66w">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_lksnQNQdEdyvA5N7PsT66w" actionId="transmit"/>
+      </actions>
+    </states>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_k8De0NRdEdyDX5F2MJWAkw" name="t1" from="_ZkX04NRdEdyDX5F2MJWAkw" to="_aIgcsNRdEdyDX5F2MJWAkw"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_Lpr2wNQdEdyvA5N7PsT66w" name="t2" from="_aIgcsNRdEdyDX5F2MJWAkw" to="_JEdg8NQdEdyvA5N7PsT66w">
+      <guard xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_2x27AdaHEdy5heu4pzrPug" actionId="hasSignals"/>
+      <delay xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_hhsE0NQdEdyvA5N7PsT66w" actionId="getDelay"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_MxsnsNQdEdyvA5N7PsT66w" name="t3" from="_JEdg8NQdEdyvA5N7PsT66w" to="_aIgcsNRdEdyDX5F2MJWAkw"/>
+  </com.googlecode.gridme.simstate.statemachine:GStatemachine>
+  <notation:Diagram xmi:id="_Wh_pAdRdEdyDX5F2MJWAkw" type="Statemachine" element="_Wh_pANRdEdyDX5F2MJWAkw" name="DelayedConstantConnection.simstate" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_ZkZDANRdEdyDX5F2MJWAkw" type="1002" element="_ZkX04NRdEdyDX5F2MJWAkw">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ZkZqENRdEdyDX5F2MJWAkw" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZkZqEdRdEdyDX5F2MJWAkw" x="290" y="44"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Z2opkNRdEdyDX5F2MJWAkw" type="1003" element="_Z2nbcNRdEdyDX5F2MJWAkw">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Z2opkdRdEdyDX5F2MJWAkw" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Z2opktRdEdyDX5F2MJWAkw" x="288" y="408"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_aIo_kNRdEdyDX5F2MJWAkw" type="1001" element="_aIgcsNRdEdyDX5F2MJWAkw">
+      <children xmi:type="notation:Node" xmi:id="_aIpmoNRdEdyDX5F2MJWAkw" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_aIo_kdRdEdyDX5F2MJWAkw" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aIo_ktRdEdyDX5F2MJWAkw" x="288" y="132"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_JE17cNQdEdyvA5N7PsT66w" type="1001" element="_JEdg8NQdEdyvA5N7PsT66w">
+      <children xmi:type="notation:Node" xmi:id="_JE8CENQdEdyvA5N7PsT66w" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_JE17cdQdEdyvA5N7PsT66w"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_JE17ctQdEdyvA5N7PsT66w" x="288" y="276"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Rv0ukNQdEdyvA5N7PsT66w" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_Rv0uk9QdEdyvA5N7PsT66w" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Rv0ulNQdEdyvA5N7PsT66w" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Rv0ukdQdEdyvA5N7PsT66w" description="Connection waits for a specified period of time and transmits constant number of signals." fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Rv0uktQdEdyvA5N7PsT66w" x="420" y="168" width="205" height="73"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_Wh_pAtRdEdyDX5F2MJWAkw"/>
+    <edges xmi:type="notation:Edge" xmi:id="_k8FUANRdEdyDX5F2MJWAkw" type="3001" element="_k8De0NRdEdyDX5F2MJWAkw" source="_ZkZDANRdEdyDX5F2MJWAkw" target="_aIo_kNRdEdyDX5F2MJWAkw">
+      <children xmi:type="notation:Node" xmi:id="_k8F7E9RdEdyDX5F2MJWAkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_k8F7FNRdEdyDX5F2MJWAkw" x="-5" y="-9"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_k8F7ENRdEdyDX5F2MJWAkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_k8F7EdRdEdyDX5F2MJWAkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_k8F7EtRdEdyDX5F2MJWAkw" points="[2, 20, -8, -176]$[30, 194, 20, -2]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_Lpx9YNQdEdyvA5N7PsT66w" type="3001" element="_Lpr2wNQdEdyvA5N7PsT66w" source="_aIo_kNRdEdyDX5F2MJWAkw" target="_JE17cNQdEdyvA5N7PsT66w">
+      <children xmi:type="notation:Node" xmi:id="_Lpx9ZNQdEdyvA5N7PsT66w" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Lpx9ZdQdEdyvA5N7PsT66w" x="7" y="-14"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_Lpx9YdQdEdyvA5N7PsT66w"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Lpx9YtQdEdyvA5N7PsT66w"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Lpx9Y9QdEdyvA5N7PsT66w" points="[9, 20, -4, -133]$[-10, 153, -23, 0]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_MxsnsdQdEdyvA5N7PsT66w" type="3001" element="_MxsnsNQdEdyvA5N7PsT66w" source="_JE17cNQdEdyvA5N7PsT66w" target="_aIo_kNRdEdyDX5F2MJWAkw">
+      <children xmi:type="notation:Node" xmi:id="_MxsntdQdEdyvA5N7PsT66w" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_MxsnttQdEdyvA5N7PsT66w" x="2" y="-14"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_MxsnstQdEdyvA5N7PsT66w"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Mxsns9QdEdyvA5N7PsT66w"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_MxsntNQdEdyvA5N7PsT66w" points="[-23, 0, -8, 150]$[-87, 0, -72, 150]$[-87, -142, -72, 8]$[-23, -142, -8, 8]"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_MxyuUNQdEdyvA5N7PsT66w" id="(0.2,0.35)"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

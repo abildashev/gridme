@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.googlecode.gridme.ui.perspectives.GridmePerspective"
+            icon="icons/gridme.png"
+            id="com.googlecode.gridme.ui.perspectives.GridmePerspective"
+            name="Grid modeling">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="com.googlecode.gridme.wizards"
+            class="com.googlecode.gridme.ui.wizards.GridmeProjectWizard"
+            finalPerspective="com.googlecode.gridme.ui.perspectives.GridmePerspective"
+            icon="icons/gridme.png"
+            id="com.googlecode.gridme.ui.ProjectWizard"
+            name="Grid modeling project"
+            project="true">
+      </wizard>
+      <category
+            id="com.googlecode.gridme.wizards"
+            name="Grid modeling">
+      </category>
+      <wizard
+            category="com.googlecode.gridme.wizards"
+            class="com.googlecode.gridme.ui.wizards.ExperimentWizard"
+            icon="icons/experiment.png"
+            id="com.googlecode.gridme.ui.ExperimentWizard"
+            name="Experiment">
+      </wizard>
+      <wizard
+            category="com.googlecode.gridme.wizards"
+            class="com.googlecode.gridme.ui.workload.WorkloadWizard"
+            icon="icons/workload.png"
+            id="com.googlecode.gridme.ui.WorkloadWizard"
+            name="Workload">
+      </wizard>
+   </extension>
+   <extension
+         id="GridmeNature"
+         name="Grid modeling project"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.googlecode.gridme.ui.GridmeProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/gridme_nature.png"
+            id="com.googlecode.gridme.ui.GridmeNatureImage"
+            natureId="com.googlecode.gridme.ui.GridmeNature">
+      </image>
+   </extension>
+   <extension
+         id="GridmeProblem"
+         name="Gridme Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.googlecode.gridme.ui.editors.ExperimentEditor"
+            contributorClass="com.googlecode.gridme.ui.editors.ExperimentEditorContributor"
+            default="true"
+            extensions="gme"
+            icon="icons/experiment.png"
+            id="com.googlecode.gridme.ui.ExperimentEditor"
+            name="Grid model experiment editor">
+      </editor>
+      <editor
+            class="com.googlecode.gridme.ui.editors.GanttChartEditor"
+            contributorClass="com.googlecode.gridme.ui.editors.GanttChartEditorContributor"
+            default="true"
+            extensions="gantt"
+            icon="icons/gantt.png"
+            id="com.googlecode.gridme.ui.GanttChartEditor"
+            name="Cluster Gantt chart editor">
+      </editor>
+      <editor
+            class="com.googlecode.gridme.ui.editors.WorkloadEditor"
+            contributorClass="com.googlecode.gridme.ui.editors.WorkloadEditorContributor"
+            default="true"
+            extensions="swfz"
+            icon="icons/workload.png"
+            id="com.googlecode.gridme.ui.WorkloadEditor"
+            name="Workload editor">
+      </editor>
+      <editor
+            class="com.googlecode.gridme.ui.editors.ModelEditor"
+            contributorClass="com.googlecode.gridme.ui.editors.ModelEditorContributor"
+            default="false"
+            extensions="gmm"
+            icon="icons/gmodel.png"
+            id="com.googlecode.gridme.ui.ModelEditor"
+            name="Grid model editor">
+      </editor>
+      <editor
+            class="com.googlecode.gridme.ui.editors.VisualizerChartEditor"
+            default="false"
+            icon="icons/visual.png"
+            id="com.googlecode.gridme.ui.visualizerEditor"
+            name="Visualizer results">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="com.googlecode.gridme.view"
+            name="Grid modeling">
+      </category>
+      <view
+            allowMultiple="false"
+            category="com.googlecode.gridme.ui.view"
+            class="com.googlecode.gridme.ui.view.GridProjectView"
+            icon="icons/gridme.png"
+            id="com.googlecode.gridme.ui.view.project"
+            name="Grid modeling project"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.googlecode.gridme.ui.GridmePreferencePage"
+            id="com.googlecode.gridme.prefs"
+            name="Gridme">
+      </page>
+   </extension>
+   
+   
+</plugin>

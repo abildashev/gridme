@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Compile com.googlecode.gridme.feature" default="main">
+	<target name="main">
+		<ant antfile="build.xml" dir="../com.googlecode.gridme.lib" target="build.jars"/>
+		<ant antfile="build.xml" dir="../com.googlecode.gridme.model" target="build.jars"/>
+		<ant antfile="build.xml" dir="../com.googlecode.gridme.model.edit" target="build.jars"/>
+		<ant antfile="build.xml" dir="../com.googlecode.gridme.diagram" target="build.jars"/>
+		<ant antfile="build.xml" dir="../com.googlecode.gridme.simstate" target="build.jars"/>
+		<ant antfile="build.xml" dir="../com.googlecode.gridme.runtime" target="build.jars"/>
+		<ant antfile="build.xml" dir="../com.googlecode.gridme.ui" target="build.jars"/>
+	</target>
+</project>

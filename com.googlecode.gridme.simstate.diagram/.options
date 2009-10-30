@@ -1,0 +1,7 @@
+# Tracing options for the com.googlecode.gridme.simstate.diagram plug-in
+
+# Common issues
+com.googlecode.gridme.simstate.diagram/debug=false
+
+# Visual IDs
+com.googlecode.gridme.simstate.diagram/debug/visualID=false

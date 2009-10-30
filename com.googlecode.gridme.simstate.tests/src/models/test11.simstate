@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.googlecode.gridme.simstate.statemachine="http://example.org/statemachine" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <com.googlecode.gridme.simstate.statemachine:GStatemachine xmi:id="_tKzrUMrNEdyMEss429-bDQ" name="test11" package="com.googlecode.gridme.simstate.tests">
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStartState" xmi:id="_uC2toMrNEdyMEss429-bDQ"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStopState" xmi:id="_uVtYMMrNEdyMEss429-bDQ"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_f9PfAMrnEdyUDfAW0wwkkw" name="send">
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_UQzQkMroEdyUDfAW0wwkkw">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_VOH0cMroEdyUDfAW0wwkkw" actionId="send"/>
+      </actions>
+    </states>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_neLg4MrnEdyUDfAW0wwkkw" name="null"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_s8NP0MrnEdyUDfAW0wwkkw" name="haveSig1">
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_xXUTwMroEdyUDfAW0wwkkw">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_x5vrYMroEdyUDfAW0wwkkw" actionId="recordSig1"/>
+      </actions>
+    </states>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_ubFooMrnEdyUDfAW0wwkkw" name="haveSig2">
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_zciT0MroEdyUDfAW0wwkkw">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_ztjyYMroEdyUDfAW0wwkkw" actionId="recordSig2"/>
+      </actions>
+    </states>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_hJ3qMMrnEdyUDfAW0wwkkw" name="t1" from="_uC2toMrNEdyMEss429-bDQ" to="_f9PfAMrnEdyUDfAW0wwkkw"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_rqABEMrnEdyUDfAW0wwkkw" name="t2" from="_f9PfAMrnEdyUDfAW0wwkkw" to="_neLg4MrnEdyUDfAW0wwkkw"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_yVJDYMrnEdyUDfAW0wwkkw" name="s2" from="_neLg4MrnEdyUDfAW0wwkkw" to="_ubFooMrnEdyUDfAW0wwkkw">
+      <signals xmi:type="com.googlecode.gridme.simstate.statemachine:StringValue" xmi:id="_ZqFCYMroEdyUDfAW0wwkkw" value="com.googlecode.gridme.simstate.tests.Test11AE.TSig2"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_xQ4KAMrnEdyUDfAW0wwkkw" name="s1" from="_neLg4MrnEdyUDfAW0wwkkw" to="_s8NP0MrnEdyUDfAW0wwkkw">
+      <signals xmi:type="com.googlecode.gridme.simstate.statemachine:StringValue" xmi:id="_YIqS8MroEdyUDfAW0wwkkw" value="com.googlecode.gridme.simstate.tests.Test11AE.TSig1"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_zZbx8MrnEdyUDfAW0wwkkw" name="fin" from="_neLg4MrnEdyUDfAW0wwkkw" to="_uVtYMMrNEdyMEss429-bDQ">
+      <guard xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_vYHcIMroEdyUDfAW0wwkkw" actionId="checkFlags"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_0SPpQMrnEdyUDfAW0wwkkw" name="b2" from="_ubFooMrnEdyUDfAW0wwkkw" to="_neLg4MrnEdyUDfAW0wwkkw"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_2INFUMrnEdyUDfAW0wwkkw" name="b1" from="_s8NP0MrnEdyUDfAW0wwkkw" to="_neLg4MrnEdyUDfAW0wwkkw"/>
+  </com.googlecode.gridme.simstate.statemachine:GStatemachine>
+  <notation:Diagram xmi:id="_tLeZsMrNEdyMEss429-bDQ" type="Statemachine" element="_tKzrUMrNEdyMEss429-bDQ" name="test4.simstate" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_uC-CYMrNEdyMEss429-bDQ" type="1002" element="_uC2toMrNEdyMEss429-bDQ">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_uC-CYcrNEdyMEss429-bDQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_uC-CYsrNEdyMEss429-bDQ" x="303" y="37"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_uVumUMrNEdyMEss429-bDQ" type="1003" element="_uVtYMMrNEdyMEss429-bDQ">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_uVumUcrNEdyMEss429-bDQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_uVumUsrNEdyMEss429-bDQ" x="312" y="480"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_9bGWEMrlEdyUDfAW0wwkkw" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_9bHkMMrlEdyUDfAW0wwkkw" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_9bILQMrlEdyUDfAW0wwkkw" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_9bGWEcrlEdyUDfAW0wwkkw" fontName="Sans" description="Test signal transitions and signal order in the queue." fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9bGWEsrlEdyUDfAW0wwkkw" x="36" y="72" width="169" height="97"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_f9R7QMrnEdyUDfAW0wwkkw" type="1001" element="_f9PfAMrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_f9TJYMrnEdyUDfAW0wwkkw" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_f9R7QcrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_f9R7QsrnEdyUDfAW0wwkkw" x="312" y="144"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_iahZwMrnEdyUDfAW0wwkkw" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_iaiA0MrnEdyUDfAW0wwkkw" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_iaiA0crnEdyUDfAW0wwkkw" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_iahZwcrnEdyUDfAW0wwkkw" fontName="Sans" description="State send sends 2 signals in this order: sig1, sig2." fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_iahZwsrnEdyUDfAW0wwkkw" x="516" y="36" width="181" height="73"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_neMvAMrnEdyUDfAW0wwkkw" type="1001" element="_neLg4MrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_neNWEMrnEdyUDfAW0wwkkw" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_neMvAcrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_neMvAsrnEdyUDfAW0wwkkw" x="312" y="276"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_s8N24MrnEdyUDfAW0wwkkw" type="1001" element="_s8NP0MrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_s8Od8MrnEdyUDfAW0wwkkw" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_s8N24crnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_s8N24srnEdyUDfAW0wwkkw" x="197" y="376"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ubG2wMrnEdyUDfAW0wwkkw" type="1001" element="_ubFooMrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_ubG2w8rnEdyUDfAW0wwkkw" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ubG2wcrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ubG2wsrnEdyUDfAW0wwkkw" x="420" y="372"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_9M3a4MrnEdyUDfAW0wwkkw" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_9M4pAMrnEdyUDfAW0wwkkw" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_9M5QEMrnEdyUDfAW0wwkkw" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_9M3a4crnEdyUDfAW0wwkkw" fontName="Sans" description="In null state we have 2 signals. Transition s1 is executed if sig1 can be found in queue. The same s2" fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9M3a4srnEdyUDfAW0wwkkw" x="444" y="156" width="193" height="97"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GtNvwMroEdyUDfAW0wwkkw" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_GtO94MroEdyUDfAW0wwkkw" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GtO94croEdyUDfAW0wwkkw" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GtNvwcroEdyUDfAW0wwkkw" fontName="Sans" description="States haveSig1 and haveSig2 record execution flags. Transition fin will be used if both states are visited." fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GtNvwsroEdyUDfAW0wwkkw" x="420" y="492" width="181" height="97"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_tLeZscrNEdyMEss429-bDQ"/>
+    <edges xmi:type="notation:Edge" xmi:id="_hJ5fYMrnEdyUDfAW0wwkkw" type="3001" element="_hJ3qMMrnEdyUDfAW0wwkkw" source="_uC-CYMrNEdyMEss429-bDQ" target="_f9R7QMrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_hJ7UkMrnEdyUDfAW0wwkkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_hJ7UkcrnEdyUDfAW0wwkkw" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_hJ5fYcrnEdyUDfAW0wwkkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_hJ5fYsrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_hJ5fY8rnEdyUDfAW0wwkkw" points="[7, 20, -2, -87]$[7, 87, -2, -20]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_rqAoIMrnEdyUDfAW0wwkkw" type="3001" element="_rqABEMrnEdyUDfAW0wwkkw" source="_f9R7QMrnEdyUDfAW0wwkkw" target="_neMvAMrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_rqBPMMrnEdyUDfAW0wwkkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_rqBPMcrnEdyUDfAW0wwkkw" x="-7" y="23"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_rqAoIcrnEdyUDfAW0wwkkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_rqAoIsrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_rqAoI8rnEdyUDfAW0wwkkw" points="[-3, 9, 0, -100]$[-5, 101, -2, -8]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_rqDrcMrnEdyUDfAW0wwkkw" id="(0.5,0.775)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_rqDrccrnEdyUDfAW0wwkkw" id="(0.425,0.2)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_xQ5YIMrnEdyUDfAW0wwkkw" type="3001" element="_xQ4KAMrnEdyUDfAW0wwkkw" source="_neMvAMrnEdyUDfAW0wwkkw" target="_s8N24MrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_xQ5_MMrnEdyUDfAW0wwkkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_xQ5_McrnEdyUDfAW0wwkkw" x="4" y="23"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_xQ5YIcrnEdyUDfAW0wwkkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_xQ5YIsrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_xQ5YI8rnEdyUDfAW0wwkkw" points="[-20, 19, 87, -81]$[-135, 107, -28, 7]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_yVJqcMrnEdyUDfAW0wwkkw" type="3001" element="_yVJDYMrnEdyUDfAW0wwkkw" source="_neMvAMrnEdyUDfAW0wwkkw" target="_ubG2wMrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_yVKRgMrnEdyUDfAW0wwkkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_yVKRgcrnEdyUDfAW0wwkkw" x="4" y="-17"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_yVJqccrnEdyUDfAW0wwkkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_yVJqcsrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_yVJqc8rnEdyUDfAW0wwkkw" points="[20, 17, -96, -79]$[145, 102, 29, 6]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_zZdAEMrnEdyUDfAW0wwkkw" type="3001" element="_zZbx8MrnEdyUDfAW0wwkkw" source="_neMvAMrnEdyUDfAW0wwkkw" target="_uVumUMrNEdyMEss429-bDQ">
+      <children xmi:type="notation:Node" xmi:id="_zZdAFMrnEdyUDfAW0wwkkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_zZdnIMrnEdyUDfAW0wwkkw" x="17" y="-20"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_zZdAEcrnEdyUDfAW0wwkkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_zZdAEsrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_zZdAE8rnEdyUDfAW0wwkkw" points="[-3, 8, -5, -184]$[-18, 188, -20, -4]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_zZfcUMrnEdyUDfAW0wwkkw" id="(0.45,0.8)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_0SQQUMrnEdyUDfAW0wwkkw" type="3001" element="_0SPpQMrnEdyUDfAW0wwkkw" source="_ubG2wMrnEdyUDfAW0wwkkw" target="_neMvAMrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_0SQ3YMrnEdyUDfAW0wwkkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_0SQ3YcrnEdyUDfAW0wwkkw" x="-32" y="-55"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_0SQQUcrnEdyUDfAW0wwkkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_0SQQUsrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_0SQQU8rnEdyUDfAW0wwkkw" points="[29, 0, 137, 110]$[79, 0, 187, 110]$[79, -104, 187, 6]$[-96, -104, 12, 6]"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_0STToMrnEdyUDfAW0wwkkw" id="(0.7,0.15)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_2IOTcMrnEdyUDfAW0wwkkw" type="3001" element="_2INFUMrnEdyUDfAW0wwkkw" source="_s8N24MrnEdyUDfAW0wwkkw" target="_neMvAMrnEdyUDfAW0wwkkw">
+      <children xmi:type="notation:Node" xmi:id="_2IO6gMrnEdyUDfAW0wwkkw" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_2IO6gcrnEdyUDfAW0wwkkw" x="-30" y="56"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_2IOTccrnEdyUDfAW0wwkkw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_2IOTcsrnEdyUDfAW0wwkkw" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_2IOTc8rnEdyUDfAW0wwkkw" points="[-6, 0, -130, 112]$[-50, 0, -174, 112]$[-50, -106, -174, 6]$[109, -106, -15, 6]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_2IQvsMrnEdyUDfAW0wwkkw" id="(0.10526316,0.425)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_2IQvscrnEdyUDfAW0wwkkw" id="(0.375,0.125)"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

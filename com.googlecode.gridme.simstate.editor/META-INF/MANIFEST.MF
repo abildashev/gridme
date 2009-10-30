@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Statemachine model editor
+Bundle-SymbolicName: com.googlecode.gridme.simstate.editor; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-ClassPath: .
+Bundle-Activator: statemachine.presentation.StatemachineEditorPlugin$Implementation
+Bundle-Vendor: gridme.googlecode.com
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: statemachine.presentation
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources;visibility:=reexport,
+ com.googlecode.gridme.simstate.edit;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi;visibility:=reexport,
+ org.eclipse.emf.edit.ui;visibility:=reexport,
+ org.eclipse.ui.ide;visibility:=reexport
+Eclipse-LazyStart: true

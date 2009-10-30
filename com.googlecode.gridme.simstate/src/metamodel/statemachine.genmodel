@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.googlecode.gridme.simstate/src-gen"
+    modelPluginID="com.googlecode.gridme.simstate" modelName="Statemachine" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>statemachine.ecore</foreignModel>
+  <genPackages prefix="Statemachine" disposableProviderFactory="true" ecorePackage="statemachine.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="statemachine.ecore#//ActionKind">
+      <genEnumLiterals ecoreEnumLiteral="statemachine.ecore#//ActionKind/ENTRY"/>
+      <genEnumLiterals ecoreEnumLiteral="statemachine.ecore#//ActionKind/EXIT"/>
+    </genEnums>
+    <genClasses ecoreClass="statemachine.ecore#//Named">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//Named/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//Named/comment"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="statemachine.ecore#//GAbstractState">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//GAbstractState/actions"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="statemachine.ecore#//GAbstractAction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//GAbstractAction/kind"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//GState"/>
+    <genClasses ecoreClass="statemachine.ecore#//Transition">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference statemachine.ecore#//Transition/from"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference statemachine.ecore#//Transition/to"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//Transition/guard"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//Transition/delay"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//Transition/signals"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//Transition/preserveTimers"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//GCompositeState">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//GCompositeState/states"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//GCompositeState/transitions"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//GStartState"/>
+    <genClasses ecoreClass="statemachine.ecore#//GStopState"/>
+    <genClasses ecoreClass="statemachine.ecore#//GStatemachine">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//GStatemachine/parameter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//GStatemachine/package"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//CallAction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference statemachine.ecore#//CallAction/call"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//Parameter"/>
+    <genClasses image="false" ecoreClass="statemachine.ecore#//Value"/>
+    <genClasses ecoreClass="statemachine.ecore#//GetParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference statemachine.ecore#//GetParameter/parameter"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//Call">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//Call/actionId"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="statemachine.ecore#//ConstantValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute statemachine.ecore#//ConstantValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="statemachine.ecore#//StringValue"/>
+    <genClasses image="false" ecoreClass="statemachine.ecore#//NumberValue"/>
+    <genClasses ecoreClass="statemachine.ecore#//BooleanValue"/>
+    <genClasses ecoreClass="statemachine.ecore#//LongValue"/>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.googlecode.gridme.simstate.statemachine="http://example.org/statemachine" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <com.googlecode.gridme.simstate.statemachine:GStatemachine xmi:id="_FQ-2gMkgEdyyxbfpOlxN0g" name="test2" comment="" package="com.googlecode.gridme.simstate.tests">
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStartState" xmi:id="_GD-ZsMkgEdyyxbfpOlxN0g"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStopState" xmi:id="_GcnjMMkgEdyyxbfpOlxN0g"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_GvJdoMkgEdyyxbfpOlxN0g" name="State1"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_HuqZ4MkgEdyyxbfpOlxN0g" name="t1" from="_GD-ZsMkgEdyyxbfpOlxN0g" to="_GvJdoMkgEdyyxbfpOlxN0g">
+      <guard xmi:type="com.googlecode.gridme.simstate.statemachine:StringValue" xmi:id="_IncNQMkmEdyyxbfpOlxN0g" value="true"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_IcHVwMkgEdyyxbfpOlxN0g" name="t2" from="_GvJdoMkgEdyyxbfpOlxN0g" to="_GcnjMMkgEdyyxbfpOlxN0g"/>
+  </com.googlecode.gridme.simstate.statemachine:GStatemachine>
+  <notation:Diagram xmi:id="_FRXRAMkgEdyyxbfpOlxN0g" type="Statemachine" element="_FQ-2gMkgEdyyxbfpOlxN0g" name="test1.simstate" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_GEW0MMkgEdyyxbfpOlxN0g" type="1002" element="_GD-ZsMkgEdyyxbfpOlxN0g">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GEW0MckgEdyyxbfpOlxN0g"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GEW0MskgEdyyxbfpOlxN0g" x="240" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GcnjMckgEdyyxbfpOlxN0g" type="1003" element="_GcnjMMkgEdyyxbfpOlxN0g">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GcnjMskgEdyyxbfpOlxN0g"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GcnjM8kgEdyyxbfpOlxN0g" x="240" y="396"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GvJdockgEdyyxbfpOlxN0g" type="1001" element="_GvJdoMkgEdyyxbfpOlxN0g">
+      <children xmi:type="notation:Node" xmi:id="_GvPkQMkgEdyyxbfpOlxN0g" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GvJdoskgEdyyxbfpOlxN0g"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GvJdo8kgEdyyxbfpOlxN0g" x="240" y="228"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_K62CAMkgEdyyxbfpOlxN0g" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_K62CA8kgEdyyxbfpOlxN0g" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_K62CBMkgEdyyxbfpOlxN0g" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_K62CAckgEdyyxbfpOlxN0g" description="Transition t1 by string guard. Must cause an exception." fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_K62CAskgEdyyxbfpOlxN0g" x="36" y="120" width="109" height="97"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_FRXRAckgEdyyxbfpOlxN0g"/>
+    <edges xmi:type="notation:Edge" xmi:id="_HuqZ4ckgEdyyxbfpOlxN0g" type="3001" element="_HuqZ4MkgEdyyxbfpOlxN0g" source="_GEW0MMkgEdyyxbfpOlxN0g" target="_GvJdockgEdyyxbfpOlxN0g">
+      <children xmi:type="notation:Node" xmi:id="_HuwggMkgEdyyxbfpOlxN0g" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_HuwggckgEdyyxbfpOlxN0g" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_HuqZ4skgEdyyxbfpOlxN0g"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_HuqZ48kgEdyyxbfpOlxN0g"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_HuqZ5MkgEdyyxbfpOlxN0g" points="[2, 20, -2, -148]$[2, 188, -2, 20]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_IcHVwckgEdyyxbfpOlxN0g" type="3001" element="_IcHVwMkgEdyyxbfpOlxN0g" source="_GvJdockgEdyyxbfpOlxN0g" target="_GcnjMckgEdyyxbfpOlxN0g">
+      <children xmi:type="notation:Node" xmi:id="_IcHVxckgEdyyxbfpOlxN0g" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_IcHVxskgEdyyxbfpOlxN0g" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_IcHVwskgEdyyxbfpOlxN0g"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_IcHVw8kgEdyyxbfpOlxN0g"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_IcHVxMkgEdyyxbfpOlxN0g" points="[3, 20, -18, -172]$[41, 186, 20, -6]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://example.org/statemachine" 
+       class = "statemachine.StatemachinePackage"
+       genModel = "src/metamodel/statemachine.genmodel" /> 
+  </extension>
+  <extension
+        point="org.eclipse.ui.newWizards">
+     <category
+           id="com.googlecode.gridme.simstate"
+           name="SimState">
+     </category>
+  </extension>
+  <extension
+        point="org.eclipse.ui.popupMenus">
+     <objectContribution
+           adaptable="false"
+           id="com.googlecode.gridme.simstate.generate"
+           nameFilter="*.simstate"
+           objectClass="org.eclipse.core.resources.IFile">
+        <action
+              class="com.googlecode.gridme.simstate.GenerateAction"
+              icon="icons/obj16/Generate.gif"
+              id="com.googlecode.gridme.simstate.generateAction"
+              label="Generate"
+              tooltip="Generate state machine code">
+        </action>
+     </objectContribution>
+  </extension>
+
+</plugin>

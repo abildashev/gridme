@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.googlecode.gridme.simstate.statemachine="http://example.org/statemachine" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <com.googlecode.gridme.simstate.statemachine:GStatemachine xmi:id="_zgHF8cocEdy34daSq4q_aA" name="test3" package="com.googlecode.gridme.simstate.tests">
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStartState" xmi:id="_0XuqcMocEdy34daSq4q_aA"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStopState" xmi:id="_0rabcMocEdy34daSq4q_aA"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_09OkMMocEdy34daSq4q_aA" name="State1"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_168JoMocEdy34daSq4q_aA" name="t1" from="_0XuqcMocEdy34daSq4q_aA" to="_09OkMMocEdy34daSq4q_aA">
+      <guard xmi:type="com.googlecode.gridme.simstate.statemachine:GetParameter" xmi:id="_dbBBoModEdy34daSq4q_aA" parameter="_eX1PMModEdy34daSq4q_aA"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_2dI3wMocEdy34daSq4q_aA" name="t2" from="_09OkMMocEdy34daSq4q_aA" to="_0rabcMocEdy34daSq4q_aA">
+      <guard xmi:type="com.googlecode.gridme.simstate.statemachine:GetParameter" xmi:id="_d6pj8ModEdy34daSq4q_aA" parameter="_fp6iIModEdy34daSq4q_aA"/>
+    </transitions>
+    <parameter xmi:type="com.googlecode.gridme.simstate.statemachine:Parameter" xmi:id="_eX1PMModEdy34daSq4q_aA" name="trueParam"/>
+    <parameter xmi:type="com.googlecode.gridme.simstate.statemachine:Parameter" xmi:id="_fp6iIModEdy34daSq4q_aA" name="falseParam"/>
+  </com.googlecode.gridme.simstate.statemachine:GStatemachine>
+  <notation:Diagram xmi:id="_zgKwUMocEdy34daSq4q_aA" type="Statemachine" element="_zgHF8cocEdy34daSq4q_aA" name="test3.simstate" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_0X1_MMocEdy34daSq4q_aA" type="1002" element="_0XuqcMocEdy34daSq4q_aA">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_0X1_McocEdy34daSq4q_aA" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_0X1_MsocEdy34daSq4q_aA" x="332" y="53"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_0rbpkMocEdy34daSq4q_aA" type="1003" element="_0rabcMocEdy34daSq4q_aA">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_0rbpkcocEdy34daSq4q_aA" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_0rbpksocEdy34daSq4q_aA" x="338" y="445"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_09PyUMocEdy34daSq4q_aA" type="1001" element="_09OkMMocEdy34daSq4q_aA">
+      <children xmi:type="notation:Node" xmi:id="_09RAcMocEdy34daSq4q_aA" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_09PyUcocEdy34daSq4q_aA" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_09PyUsocEdy34daSq4q_aA" x="332" y="245"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_VnI1oModEdy34daSq4q_aA" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_VnKDwModEdy34daSq4q_aA" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_VnKDwcodEdy34daSq4q_aA" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_VnI1ocodEdy34daSq4q_aA" fontName="Sans" description="Transition by true parameter guard" fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_VnI1osodEdy34daSq4q_aA" x="36" y="84" width="169" height="61"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_au-5MModEdy34daSq4q_aA" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_au-5McodEdy34daSq4q_aA" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_au-5MsodEdy34daSq4q_aA" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_au-5M8odEdy34daSq4q_aA" fontName="Sans" description="Transition by false parameter guard" fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_au-5NModEdy34daSq4q_aA" x="48" y="348" width="169" height="61"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_zgKwUcocEdy34daSq4q_aA"/>
+    <edges xmi:type="notation:Edge" xmi:id="_16-l4MocEdy34daSq4q_aA" type="3001" element="_168JoMocEdy34daSq4q_aA" source="_0X1_MMocEdy34daSq4q_aA" target="_09PyUMocEdy34daSq4q_aA">
+      <children xmi:type="notation:Node" xmi:id="_17AbEMocEdy34daSq4q_aA" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_17AbEcocEdy34daSq4q_aA" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_16-l4cocEdy34daSq4q_aA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_16-l4socEdy34daSq4q_aA" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_16-l48ocEdy34daSq4q_aA" points="[-9, 20, -10, -172]$[-20, 186, -21, -6]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_2dJe0MocEdy34daSq4q_aA" type="3001" element="_2dI3wMocEdy34daSq4q_aA" source="_09PyUMocEdy34daSq4q_aA" target="_0rbpkMocEdy34daSq4q_aA">
+      <children xmi:type="notation:Node" xmi:id="_2dKF48ocEdy34daSq4q_aA" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_2dKF5MocEdy34daSq4q_aA" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_2dKF4MocEdy34daSq4q_aA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_2dKF4cocEdy34daSq4q_aA" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_2dKF4socEdy34daSq4q_aA" points="[-4, 20, -9, -180]$[-15, 195, -20, -5]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

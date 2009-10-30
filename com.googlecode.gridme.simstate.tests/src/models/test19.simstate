@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:com.googlecode.gridme.simstate.statemachine="http://example.org/statemachine" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <com.googlecode.gridme.simstate.statemachine:GStatemachine xmi:id="_tKzrUMrNEdyMEss429-bDQ" name="test19" comment="Test two alarms" package="com.googlecode.gridme.simstate.tests">
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStartState" xmi:id="_WB9OsODtEdy0OqgwWY1xKQ"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStopState" xmi:id="_WQR-kODtEdy0OqgwWY1xKQ"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_Wkde0ODtEdy0OqgwWY1xKQ" name="idle"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_oJjgkBqxEd2ECcOPc2D-uQ" name="often">
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_F8lxACzFEd2QqqHr6zqoaw">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_GphvgCzFEd2QqqHr6zqoaw" actionId="alarm1"/>
+      </actions>
+    </states>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_mPvigErFEd2SWcOnNdOCyg" name="rarely">
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_KlPsQCzHEd2QqqHr6zqoaw">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_LO2C4CzHEd2QqqHr6zqoaw" actionId="alarm2"/>
+      </actions>
+    </states>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_X-tPQODtEdy0OqgwWY1xKQ" name="t1" from="_WB9OsODtEdy0OqgwWY1xKQ" to="_Wkde0ODtEdy0OqgwWY1xKQ"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_y9fkQBqxEd2ECcOPc2D-uQ" name="t2" from="_Wkde0ODtEdy0OqgwWY1xKQ" to="_oJjgkBqxEd2ECcOPc2D-uQ">
+      <signals xmi:type="com.googlecode.gridme.simstate.statemachine:GetParameter" xmi:id="__H2y4BqyEd2ECcOPc2D-uQ" parameter="_8f__0BqyEd2ECcOPc2D-uQ"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_z3yCQBqxEd2ECcOPc2D-uQ" name="t3" from="_oJjgkBqxEd2ECcOPc2D-uQ" to="_Wkde0ODtEdy0OqgwWY1xKQ"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_n6nv8ErFEd2SWcOnNdOCyg" name="t4" from="_Wkde0ODtEdy0OqgwWY1xKQ" to="_mPvigErFEd2SWcOnNdOCyg">
+      <signals xmi:type="com.googlecode.gridme.simstate.statemachine:GetParameter" xmi:id="_-G-1oJ6REd27ncgawCkfeg" parameter="_yOioAJ6REd27ncgawCkfeg"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_pMwGMErFEd2SWcOnNdOCyg" name="t5" from="_mPvigErFEd2SWcOnNdOCyg" to="_Wkde0ODtEdy0OqgwWY1xKQ"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_Tpp-0J6QEd27ncgawCkfeg" name="t6" from="_Wkde0ODtEdy0OqgwWY1xKQ" to="_WQR-kODtEdy0OqgwWY1xKQ">
+      <guard xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_BZz4UJ6SEd27ncgawCkfeg" actionId="isFinished"/>
+    </transitions>
+    <parameter xmi:type="com.googlecode.gridme.simstate.statemachine:Parameter" xmi:id="_8f__0BqyEd2ECcOPc2D-uQ" name="alarmSignal1"/>
+    <parameter xmi:type="com.googlecode.gridme.simstate.statemachine:Parameter" xmi:id="_yOioAJ6REd27ncgawCkfeg" name="alarmSignal2"/>
+  </com.googlecode.gridme.simstate.statemachine:GStatemachine>
+  <notation:Diagram xmi:id="_tLeZsMrNEdyMEss429-bDQ" type="Statemachine" element="_tKzrUMrNEdyMEss429-bDQ" name="test4.simstate" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_WCA5EODtEdy0OqgwWY1xKQ" type="1002" element="_WB9OsODtEdy0OqgwWY1xKQ">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_WCA5EeDtEdy0OqgwWY1xKQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_WCA5EuDtEdy0OqgwWY1xKQ" x="276" y="36"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_WQTzwODtEdy0OqgwWY1xKQ" type="1003" element="_WQR-kODtEdy0OqgwWY1xKQ">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_WQTzweDtEdy0OqgwWY1xKQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_WQTzwuDtEdy0OqgwWY1xKQ" x="384" y="372"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Wkes8ODtEdy0OqgwWY1xKQ" type="1001" element="_Wkde0ODtEdy0OqgwWY1xKQ">
+      <children xmi:type="notation:Node" xmi:id="_Wkf7EODtEdy0OqgwWY1xKQ" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Wkes8eDtEdy0OqgwWY1xKQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Wkes8uDtEdy0OqgwWY1xKQ" x="276" y="156"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_oJkHoBqxEd2ECcOPc2D-uQ" type="1001" element="_oJjgkBqxEd2ECcOPc2D-uQ">
+      <children xmi:type="notation:Node" xmi:id="_oJkusBqxEd2ECcOPc2D-uQ" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_oJkHoRqxEd2ECcOPc2D-uQ" fontName="Bitstream Vera Sans" fillColor="8047085"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oJkHohqxEd2ECcOPc2D-uQ" x="276" y="276"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_mQB2YErFEd2SWcOnNdOCyg" type="1001" element="_mPvigErFEd2SWcOnNdOCyg">
+      <children xmi:type="notation:Node" xmi:id="_mQH9AErFEd2SWcOnNdOCyg" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_mQB2YUrFEd2SWcOnNdOCyg" fillColor="10265827"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mQB2YkrFEd2SWcOnNdOCyg" x="419" y="145"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_tLeZscrNEdyMEss429-bDQ"/>
+    <edges xmi:type="notation:Edge" xmi:id="_X-vEcODtEdy0OqgwWY1xKQ" type="3001" element="_X-tPQODtEdy0OqgwWY1xKQ" source="_WCA5EODtEdy0OqgwWY1xKQ" target="_Wkes8ODtEdy0OqgwWY1xKQ">
+      <children xmi:type="notation:Node" xmi:id="_X-w5oODtEdy0OqgwWY1xKQ" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_X-w5oeDtEdy0OqgwWY1xKQ" x="-9" y="-22"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_X-vrgODtEdy0OqgwWY1xKQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_X-vrgeDtEdy0OqgwWY1xKQ" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_X-vrguDtEdy0OqgwWY1xKQ" points="[-3, 20, -2, -144]$[-3, 184, -2, 20]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_y9gLUBqxEd2ECcOPc2D-uQ" type="3001" element="_y9fkQBqxEd2ECcOPc2D-uQ" source="_Wkes8ODtEdy0OqgwWY1xKQ" target="_oJkHoBqxEd2ECcOPc2D-uQ">
+      <children xmi:type="notation:Node" xmi:id="_y9gyYBqxEd2ECcOPc2D-uQ" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_y9gyYRqxEd2ECcOPc2D-uQ" x="-13" y="14"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_y9gLURqxEd2ECcOPc2D-uQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_y9gLUhqxEd2ECcOPc2D-uQ" fontName="Bitstream Vera Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_y9gLUxqxEd2ECcOPc2D-uQ" points="[0, 20, 0, -100]$[0, 100, 0, -20]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_z3zQYBqxEd2ECcOPc2D-uQ" type="3001" element="_z3yCQBqxEd2ECcOPc2D-uQ" source="_oJkHoBqxEd2ECcOPc2D-uQ" target="_Wkes8ODtEdy0OqgwWY1xKQ">
+      <children xmi:type="notation:Node" xmi:id="_z3zQZBqxEd2ECcOPc2D-uQ" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_z3zQZRqxEd2ECcOPc2D-uQ" x="1" y="-14"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_z3zQYRqxEd2ECcOPc2D-uQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_z3zQYhqxEd2ECcOPc2D-uQ" fontName="Bitstream Vera Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_z3zQYxqxEd2ECcOPc2D-uQ" points="[-20, 0, -20, 120]$[-92, 0, -92, 120]$[-92, -120, -92, 0]$[-20, -120, -20, 0]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_n6t2kErFEd2SWcOnNdOCyg" type="3001" element="_n6nv8ErFEd2SWcOnNdOCyg" source="_Wkes8ODtEdy0OqgwWY1xKQ" target="_mQB2YErFEd2SWcOnNdOCyg">
+      <children xmi:type="notation:Node" xmi:id="_n6t2lErFEd2SWcOnNdOCyg" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_n6t2lUrFEd2SWcOnNdOCyg" x="1" y="-14"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_n6t2kUrFEd2SWcOnNdOCyg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_n6t2kkrFEd2SWcOnNdOCyg"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_n6t2k0rFEd2SWcOnNdOCyg" points="[20, -3, -115, 15]$[123, -16, -12, 2]"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_n7AKcErFEd2SWcOnNdOCyg" id="(0.20689656,0.325)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_pMwGMUrFEd2SWcOnNdOCyg" type="3001" element="_pMwGMErFEd2SWcOnNdOCyg" source="_mQB2YErFEd2SWcOnNdOCyg" target="_Wkes8ODtEdy0OqgwWY1xKQ">
+      <children xmi:type="notation:Node" xmi:id="_pM2M0UrFEd2SWcOnNdOCyg" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_pM2M0krFEd2SWcOnNdOCyg" x="3" y="-13"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_pMwGMkrFEd2SWcOnNdOCyg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_pMwGM0rFEd2SWcOnNdOCyg"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_pM2M0ErFEd2SWcOnNdOCyg" points="[7, 20, 159, 9]$[7, 57, 159, 46]$[-96, 57, 56, 46]$[-132, 27, 20, 16]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_TptpMJ6QEd27ncgawCkfeg" type="3001" element="_Tpp-0J6QEd27ncgawCkfeg" source="_Wkes8ODtEdy0OqgwWY1xKQ" target="_WQTzwODtEdy0OqgwWY1xKQ">
+      <children xmi:type="notation:Node" xmi:id="_TpxTkJ6QEd27ncgawCkfeg" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_TpxTkZ6QEd27ncgawCkfeg" x="59" y="-14"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_TptpMZ6QEd27ncgawCkfeg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_TptpMp6QEd27ncgawCkfeg" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_TptpM56QEd27ncgawCkfeg" points="[9, 20, -99, -196]$[92, 196, -16, -20]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

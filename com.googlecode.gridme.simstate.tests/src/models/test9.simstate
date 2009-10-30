@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.googlecode.gridme.simstate.statemachine="http://example.org/statemachine" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <com.googlecode.gridme.simstate.statemachine:GStatemachine xmi:id="_tKzrUMrNEdyMEss429-bDQ" name="test9" package="com.googlecode.gridme.simstate.tests">
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStartState" xmi:id="_uC2toMrNEdyMEss429-bDQ"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStopState" xmi:id="_uVtYMMrNEdyMEss429-bDQ"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_uykTUMrNEdyMEss429-bDQ" name="State1"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_wDcFUMrNEdyMEss429-bDQ" name="t1" from="_uC2toMrNEdyMEss429-bDQ" to="_uykTUMrNEdyMEss429-bDQ"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_wllwIMrNEdyMEss429-bDQ" name="t2" from="_uykTUMrNEdyMEss429-bDQ" to="_uVtYMMrNEdyMEss429-bDQ">
+      <delay xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_ulLgIMrkEdyUDfAW0wwkkw" actionId="timer"/>
+    </transitions>
+  </com.googlecode.gridme.simstate.statemachine:GStatemachine>
+  <notation:Diagram xmi:id="_tLeZsMrNEdyMEss429-bDQ" type="Statemachine" element="_tKzrUMrNEdyMEss429-bDQ" name="test4.simstate" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_uC-CYMrNEdyMEss429-bDQ" type="1002" element="_uC2toMrNEdyMEss429-bDQ">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_uC-CYcrNEdyMEss429-bDQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_uC-CYsrNEdyMEss429-bDQ" x="303" y="37"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_uVumUMrNEdyMEss429-bDQ" type="1003" element="_uVtYMMrNEdyMEss429-bDQ">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_uVumUcrNEdyMEss429-bDQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_uVumUsrNEdyMEss429-bDQ" x="312" y="324"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_uyk6YMrNEdyMEss429-bDQ" type="1001" element="_uykTUMrNEdyMEss429-bDQ">
+      <children xmi:type="notation:Node" xmi:id="_uymIgMrNEdyMEss429-bDQ" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_uyk6YcrNEdyMEss429-bDQ" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_uylhcMrNEdyMEss429-bDQ" x="312" y="180"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_x0vD0MrNEdyMEss429-bDQ" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_x0wR8MrNEdyMEss429-bDQ" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_x0wR8crNEdyMEss429-bDQ" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_x0vD0crNEdyMEss429-bDQ" fontName="Sans" description="Transition by call timer 10 sec" fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_x0vD0srNEdyMEss429-bDQ" x="72" y="180" width="157" height="73"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_tLeZscrNEdyMEss429-bDQ"/>
+    <edges xmi:type="notation:Edge" xmi:id="_wDehkMrNEdyMEss429-bDQ" type="3001" element="_wDcFUMrNEdyMEss429-bDQ" source="_uC-CYMrNEdyMEss429-bDQ" target="_uyk6YMrNEdyMEss429-bDQ">
+      <children xmi:type="notation:Node" xmi:id="_wDfvsMrNEdyMEss429-bDQ" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_wDfvscrNEdyMEss429-bDQ" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_wDehkcrNEdyMEss429-bDQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_wDehksrNEdyMEss429-bDQ" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_wDehk8rNEdyMEss429-bDQ" points="[2, 20, -8, -207]$[-11, 224, -21, -3]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_wlm-QMrNEdyMEss429-bDQ" type="3001" element="_wllwIMrNEdyMEss429-bDQ" source="_uyk6YMrNEdyMEss429-bDQ" target="_uVumUMrNEdyMEss429-bDQ">
+      <children xmi:type="notation:Node" xmi:id="_wlnlUMrNEdyMEss429-bDQ" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_wlnlUcrNEdyMEss429-bDQ" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_wlm-QcrNEdyMEss429-bDQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_wlm-QsrNEdyMEss429-bDQ" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_wlm-Q8rNEdyMEss429-bDQ" points="[2, 20, 3, -184]$[2, 184, 3, -20]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

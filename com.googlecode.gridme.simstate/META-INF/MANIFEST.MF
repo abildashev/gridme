@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Statemachine editor and code generator plugin
+Bundle-SymbolicName: com.googlecode.gridme.simstate; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: gridme.googlecode.com
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: com.googlecode.gridme.simstate,
+ com.googlecode.gridme.simstate.loggers,
+ statemachine;uses:="org.eclipse.emf.ecore,org.eclipse.emf.common.util",
+ statemachine.impl;
+  uses:="org.eclipse.emf.ecore,
+   org.eclipse.emf.common.util,
+   org.eclipse.emf.ecore.impl,
+   org.eclipse.emf.common.notify,
+   statemachine",
+ statemachine.util;
+  uses:="org.eclipse.emf.ecore,
+   org.eclipse.emf.common.notify.impl,
+   org.eclipse.emf.common.notify,
+   statemachine"
+Require-Bundle: org.openarchitectureware.dependencies,
+ org.eclipse.ui,
+ org.eclipse.ui.ide
+Eclipse-LazyStart: true
+Bundle-Activator: com.googlecode.gridme.simstate.SimStatePlugin
+Bundle-ClassPath: .

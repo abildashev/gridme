@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.googlecode.gridme.simstate.statemachine="http://example.org/statemachine" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation">
+  <com.googlecode.gridme.simstate.statemachine:GStatemachine xmi:id="_sALDUNMUEdyYWcvfBoYsGA" name="DedicatedNode" package="com.googlecode.gridme.runtime.elements">
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStartState" xmi:id="_3iOKMNMUEdyYWcvfBoYsGA"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GStopState" xmi:id="_4cuDkNMUEdyYWcvfBoYsGA"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_5ICRcNMUEdyYWcvfBoYsGA" name="Idle"/>
+    <states xmi:type="com.googlecode.gridme.simstate.statemachine:GState" xmi:id="_87HhgNMUEdyYWcvfBoYsGA" name="Busy">
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_CZhKQNMdEdyYWcvfBoYsGA">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_DFrssNMdEdyYWcvfBoYsGA" actionId="startTask"/>
+      </actions>
+      <actions xmi:type="com.googlecode.gridme.simstate.statemachine:CallAction" xmi:id="_FM20kNMdEdyYWcvfBoYsGA" kind="EXIT">
+        <call xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_GBiZ0NMdEdyYWcvfBoYsGA" actionId="stopTask"/>
+      </actions>
+    </states>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_6LvxMNMUEdyYWcvfBoYsGA" name="t1" from="_3iOKMNMUEdyYWcvfBoYsGA" to="_5ICRcNMUEdyYWcvfBoYsGA"/>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="_9w7vMNMUEdyYWcvfBoYsGA" name="t2" from="_5ICRcNMUEdyYWcvfBoYsGA" to="_87HhgNMUEdyYWcvfBoYsGA">
+      <signals xmi:type="com.googlecode.gridme.simstate.statemachine:StringValue" xmi:id="_NLhGgNMYEdyYWcvfBoYsGA" value="com.googlecode.gridme.runtime.schedule.impl.GTaskSignal"/>
+    </transitions>
+    <transitions xmi:type="com.googlecode.gridme.simstate.statemachine:Transition" xmi:id="__H7-YNMUEdyYWcvfBoYsGA" name="t3" from="_87HhgNMUEdyYWcvfBoYsGA" to="_5ICRcNMUEdyYWcvfBoYsGA">
+      <delay xmi:type="com.googlecode.gridme.simstate.statemachine:Call" xmi:id="_QquYUNMYEdyYWcvfBoYsGA" actionId="TaskFinished"/>
+    </transitions>
+  </com.googlecode.gridme.simstate.statemachine:GStatemachine>
+  <notation:Diagram xmi:id="_sBTrwNMUEdyYWcvfBoYsGA" type="Statemachine" element="_sALDUNMUEdyYWcvfBoYsGA" name="Node.simstate" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_3iUQ0NMUEdyYWcvfBoYsGA" type="1002" element="_3iOKMNMUEdyYWcvfBoYsGA">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_3iUQ0dMUEdyYWcvfBoYsGA" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3iUQ0tMUEdyYWcvfBoYsGA" x="516" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_4cv4wNMUEdyYWcvfBoYsGA" type="1003" element="_4cuDkNMUEdyYWcvfBoYsGA">
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_4cv4wdMUEdyYWcvfBoYsGA" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_4cv4wtMUEdyYWcvfBoYsGA" x="516" y="480"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_5IC4gNMUEdyYWcvfBoYsGA" type="1001" element="_5ICRcNMUEdyYWcvfBoYsGA">
+      <children xmi:type="notation:Node" xmi:id="_5IEGoNMUEdyYWcvfBoYsGA" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_5IDfkNMUEdyYWcvfBoYsGA" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_5IDfkdMUEdyYWcvfBoYsGA" x="516" y="192"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_87JWsNMUEdyYWcvfBoYsGA" type="1001" element="_87HhgNMUEdyYWcvfBoYsGA">
+      <children xmi:type="notation:Node" xmi:id="_87JWs9MUEdyYWcvfBoYsGA" type="4001"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_87JWsdMUEdyYWcvfBoYsGA" fontName="Sans"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_87JWstMUEdyYWcvfBoYsGA" x="516" y="336"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_7igroNMbEdyYWcvfBoYsGA" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_7ih5wNMbEdyYWcvfBoYsGA" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_7ih5wdMbEdyYWcvfBoYsGA" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_7igrodMbEdyYWcvfBoYsGA" fontName="Sans" description="The node enters state Busy when it receives the signal GTaskSignal. The node will enter state Idle when the task is finished," fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7igrotMbEdyYWcvfBoYsGA" x="72" y="120" width="253" height="97"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_OErJ0NMdEdyYWcvfBoYsGA" type="Note">
+      <children xmi:type="notation:Node" xmi:id="_OErw4NMdEdyYWcvfBoYsGA" type="DiagramName">
+        <element xsi:nil="true"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_OErw4dMdEdyYWcvfBoYsGA" type="Description">
+        <element xsi:nil="true"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_OErJ0dMdEdyYWcvfBoYsGA" fontName="Sans" description="After the task is finished the node will nofity cluster by sending signal GTaskFinishedSignal" fillColor="13369343" lineColor="6737151"/>
+      <element xsi:nil="true"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OErJ0tMdEdyYWcvfBoYsGA" x="72" y="348" width="265" height="121"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_sBTrwdMUEdyYWcvfBoYsGA"/>
+    <edges xmi:type="notation:Edge" xmi:id="_6L0psNMUEdyYWcvfBoYsGA" type="3001" element="_6LvxMNMUEdyYWcvfBoYsGA" source="_3iUQ0NMUEdyYWcvfBoYsGA" target="_5IC4gNMUEdyYWcvfBoYsGA">
+      <children xmi:type="notation:Node" xmi:id="_6L130NMUEdyYWcvfBoYsGA" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_6L2e4NMUEdyYWcvfBoYsGA" y="40"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_6L0psdMUEdyYWcvfBoYsGA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_6L0pstMUEdyYWcvfBoYsGA" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_6L0ps9MUEdyYWcvfBoYsGA" points="[6, 20, -35, -127]$[61, 147, 20, 0]"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_9w89UNMUEdyYWcvfBoYsGA" type="3001" element="_9w7vMNMUEdyYWcvfBoYsGA" source="_5IC4gNMUEdyYWcvfBoYsGA" target="_87JWsNMUEdyYWcvfBoYsGA">
+      <children xmi:type="notation:Node" xmi:id="_9w9kYNMUEdyYWcvfBoYsGA" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_9w9kYdMUEdyYWcvfBoYsGA" x="15" y="-23"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_9w89UdMUEdyYWcvfBoYsGA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_9w89UtMUEdyYWcvfBoYsGA" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_9w89U9MUEdyYWcvfBoYsGA" points="[-12, 20, 80, -132]$[-85, 154, 7, 2]"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_9xAnsNMUEdyYWcvfBoYsGA" id="(0.5,0.075)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="__H9MgNMUEdyYWcvfBoYsGA" type="3001" element="__H7-YNMUEdyYWcvfBoYsGA" source="_87JWsNMUEdyYWcvfBoYsGA" target="_5IC4gNMUEdyYWcvfBoYsGA">
+      <children xmi:type="notation:Node" xmi:id="__H9zkNMUEdyYWcvfBoYsGA" type="4002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__H9zkdMUEdyYWcvfBoYsGA" x="13" y="-30"/>
+      </children>
+      <styles xmi:type="notation:RoutingStyle" xmi:id="__H9MgdMUEdyYWcvfBoYsGA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="__H9MgtMUEdyYWcvfBoYsGA" fontName="Sans"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__H9Mg9MUEdyYWcvfBoYsGA" points="[-20, 0, -20, 144]$[-92, 0, -92, 144]$[-92, -144, -92, 0]$[-20, -144, -20, 0]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

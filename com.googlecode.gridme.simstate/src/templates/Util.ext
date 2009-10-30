@@ -1,0 +1,48 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Dmitry Grushin <dgrushin@gmail.com>.
+ * 
+ * This file is part of GridMe.
+ * 
+ * GridMe is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * GridMe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
+ ******************************************************************************/
+import statemachine;
+
+String getName(String name): name + "STM";
+
+String packagePath(String package): package.replaceAll("\\.", "/") + 
+	(package != null ? "/" : "");
+
+Collection[Transition] getOutTransitions(Collection[Transition] transitions, GAbstractState state): 
+    transitions.select(t|t.from == state);
+
+Collection[Transition] getInTransitions(Collection[Transition] transitions, GAbstractState state): 
+    transitions.select(t|t.to == state);
+
+Collection[Transition] getDelayedTransitions(Collection[Transition] transitions, GAbstractState state): 
+    transitions.select(t|t.from == state && t.delay != null);
+
+Collection[Call] allActions(GStatemachine root): 
+	filterUnique(root.eAllContents.typeSelect(Call));
+	
+// Remove all elements
+// for which elements exist in the collection
+// that have the same name
+// and the index in the list is lower than what is removed.
+Collection[Call] filterUnique(List[Call] lst):
+	lst.reject(e1|!lst.select(e2|e1.actionId==e2.actionId && 
+	lst.indexOf(e2)<lst.indexOf(e1)).isEmpty);   
+ 

@@ -1,0 +1,13 @@
+<send-signal name="com.googlecode.gridme.simstate.tests.PingPongSignal" time="0" sender="p1" receiver="p2"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<profile>
+<state-change elem="p1" time="0" old="start" new="Wait"/>
+<send-signal name="com.googlecode.gridme.simstate.tests.PingPongSignal" time="0" sender="p2" receiver="p1"/>
+<state-change elem="p2" time="0" old="start" new="Wait"/>
+<send-signal name="com.googlecode.gridme.simstate.tests.PingPongSignal" time="0" sender="p1" receiver="p2"/>
+<state-change elem="p1" time="0" old="Wait" new="Wait"/>
+<send-signal name="com.googlecode.gridme.simstate.tests.PingPongSignal" time="0" sender="p2" receiver="p1"/>
+<state-change elem="p2" time="0" old="Wait" new="stop"/>
+<send-signal name="com.googlecode.gridme.simstate.tests.PingPongSignal" time="0" sender="p1" receiver="p2"/>
+<state-change elem="p1" time="0" old="Wait" new="stop"/>
+</profile>

@@ -1,0 +1,82 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Dmitry Grushin <dgrushin@gmail.com>.
+ * 
+ * This file is part of GridMe.
+ * 
+ * GridMe is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * GridMe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
+ ******************************************************************************/
+import statemachine;
+extension templates::Util;
+
+context Named ERROR "Element " + this.metaType.name + " must have a valid name" :  
+	name != null &&
+	name.matches("\\w+");
+
+context GState ERROR "The names 'start' and 'stop' are reserved" :  
+	name != "start" && name != "stop";
+
+context GStatemachine ERROR "Transitions must have unique names" :
+   transitions.forAll(e1 | !transitions.exists(e2|(e1 != e2) && (e1.name == e2.name)));
+   		
+context GStatemachine ERROR "States must have unique names" :
+   states.typeSelect(GState).forAll(e1 | 
+   	!states.typeSelect(GState).exists(e2|(e1 != e2) && 
+   	(e1.name == e2.name)));
+
+context GStatemachine ERROR "State machine must have one and only one start state" :
+   states.typeSelect(GStartState).size == 1;
+   
+context GStatemachine ERROR "State machine must have one and only one stop state" :
+   states.typeSelect(GStopState).size == 1;   
+
+context GStatemachine WARNING "Empty package name" :
+   package != null;
+
+context GStatemachine ERROR "Invalid package name" :
+   package != null && package.matches("[\\w\\.]+");
+
+context GetParameter ERROR "Specify a parameter reference" :
+   parameter != null;   
+
+context CallAction ERROR "Specify a call reference" :
+   call != null;   
+
+context Call ERROR "Specify a valid action id value" :
+   actionId != null && 
+   actionId.matches("\\w+");   
+
+context ConstantValue ERROR "Specify a value" :
+   value != null;   
+
+context GStatemachine ERROR "Stop state can not have out transitions" :
+   getOutTransitions(transitions, states.typeSelect(GStopState).first()).isEmpty;   
+
+context GStatemachine ERROR "Start state can not have in transitions" :
+   getInTransitions(transitions, states.typeSelect(GStartState).first()).isEmpty;   
+
+context GStatemachine ERROR "Start state can not have delayed out transitions" :
+   getDelayedTransitions(transitions, states.typeSelect(GStartState).first()).isEmpty;   
+
+context GStartState ERROR "Start state can not have actions" :
+   actions.isEmpty;   
+
+context GStopState ERROR "Stop state can not have actions" :
+   actions.isEmpty;   
+
+context Transition ERROR "Signal can be specified only by call, parameter, or class name" :
+   signals.forAll(e|e.metaType == Call || e.metaType == GetParameter || e.metaType == StringValue);
+   

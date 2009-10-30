@@ -1,0 +1,7 @@
+# Tracing options for the com.googlecode.gridme.diagram plug-in
+
+# Common issues
+com.googlecode.gridme.diagram/debug=false
+
+# Visual IDs
+com.googlecode.gridme.diagram/debug/visualID=false
