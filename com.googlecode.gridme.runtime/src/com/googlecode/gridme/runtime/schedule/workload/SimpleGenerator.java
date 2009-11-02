@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
@@ -50,7 +50,7 @@ public class SimpleGenerator implements WorkloadGenerator
     monitor.begin(rectLen * rectWidth);
 
     SWFWorkload result = new SWFWorkload();
-    
+
     result.getComment().setValue(WorkloadComment.NOTE, "Generator: " +
         getName() + ", " + "Generation parameters: " +
         "Length = " + RuntimeUtils.formatTime(length) + ", " +
@@ -61,7 +61,7 @@ public class SimpleGenerator implements WorkloadGenerator
     		"Maximum task length = " + RuntimeUtils.formatTime(maxLength) + ", " +
     		"Total square rectangle length = " + RuntimeUtils.formatTime(rectLen) + ", " +
     		"Total square rectangle width = " + rectWidth);
-    
+
     rand1 = new Random();
     rand2 = new Random();
     rand3 = new Random();
@@ -111,5 +111,11 @@ public class SimpleGenerator implements WorkloadGenerator
     return "This is a simple workload generator which "
         + "uses uniform distribution to create a task flow in the "
         + "specified time segment.";
+  }
+
+  @Override
+  public boolean canGenerateClones()
+  {
+    return true;
   }
 }

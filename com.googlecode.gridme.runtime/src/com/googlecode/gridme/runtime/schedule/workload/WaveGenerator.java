@@ -11,7 +11,7 @@ public class WaveGenerator implements WorkloadGenerator
 {
   protected Integer pMaxWidth = 32;
   protected Integer pMaxLength = 123456;
-  protected Float pDensity; //density=1.2;	  
+  protected Float pDensity; //density=1.2;
   protected Integer pTotalTime;//10*week_length
   protected Float pNonparalelRate = 0.90f;//one_proc_rate=0.90;
   protected Integer pMinLength = 600;
@@ -23,10 +23,10 @@ public class WaveGenerator implements WorkloadGenerator
     monitor.begin(pTotalTime);
     SWFWorkload result = new SWFWorkload();
 
-    //build in parameters		
+    //build in parameters
     int hour = 3600;
     int day_length = 24 * hour;
-    //		  float day_rate[]=new float[7];		  
+    //		  float day_rate[]=new float[7];
     //		  day_rate[0]=1.0f;
     //		  day_rate[1]=1.0f;
     //		  day_rate[2]=1.0f;
@@ -35,7 +35,7 @@ public class WaveGenerator implements WorkloadGenerator
     //		  day_rate[5]=1.00f;
     //		  day_rate[6]=1.00f;
 
-    //		  build in parameters		  
+    //		  build in parameters
 
     result.getComment().setValue(
         WorkloadComment.NOTE,
@@ -57,7 +57,7 @@ public class WaveGenerator implements WorkloadGenerator
             / 2.0f) / 4000.0f;
     for(int i = 0; i < pTotalTime; i++)
     {
-      //	int k=(i/day_length)%7;	
+      //	int k=(i/day_length)%7;
       if(rand.nextFloat() < freq
           && 2 * rand.nextFloat() < 1 + Math.sin(2 * Math.PI * (i - 8 * hour)
               / day_length))
@@ -92,4 +92,9 @@ public class WaveGenerator implements WorkloadGenerator
     return "Wave generator";
   }
 
+  @Override
+  public boolean canGenerateClones()
+  {
+    return true;
+  }
 }

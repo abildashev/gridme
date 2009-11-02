@@ -1,30 +1,32 @@
 /*******************************************************************************
  * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
 package com.googlecode.gridme.ui.workload;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -35,6 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
 import com.googlecode.gridme.runtime.schedule.workload.SWFWorkload;
@@ -74,9 +77,11 @@ public class WizardNewWorkloadCreationPage extends WizardPage implements
   private Combo generator;
   private Composite generatorParamsPanel;
   private WorkloadGeneratorUI activeGenerator;
+  private Spinner clonesCount;
+  private int numberOfClones = 1;
 
   @SuppressWarnings("unchecked")
-  private static final Class[] availableGenerators = new Class[] { SimpleGeneratorUI.class, 
+  private static final Class[] availableGenerators = new Class[] { SimpleGeneratorUI.class,
     MergeGeneratorUI.class, WaveGeneratorUI.class};
 
   private HashMap<Integer, GeneratorParameters> loadedGenerators;
@@ -127,6 +132,30 @@ public class WizardNewWorkloadCreationPage extends WizardPage implements
       }
     });
 
+    // Number of clones
+    Label clonesLab = new Label(page, SWT.NONE);
+    clonesLab.setText("Enter number of workload clones:");
+    dta = new GridData(GridData.FILL_HORIZONTAL);
+    dta.horizontalSpan = 2;
+    clonesLab.setLayoutData(dta);
+
+    clonesCount = new Spinner(page, SWT.BORDER);
+    clonesCount.setValues(0, 1, 100, 0, 1, 1);
+    clonesCount.addModifyListener(new ModifyListener()
+    {
+      public void modifyText(ModifyEvent e)
+      {
+        try
+        {
+          numberOfClones = Integer.parseInt(clonesCount.getText());
+        }
+        catch (NumberFormatException err)
+        {
+        }
+      }
+    });
+
+
     // Create stack layout with composites for each generator
     generatorParamsPanel = new Composite(page, SWT.NONE);
     generatorParamsPanel.setLayout(new StackLayout());
@@ -145,9 +174,26 @@ public class WizardNewWorkloadCreationPage extends WizardPage implements
   {
     try
     {
-      SWFWorkload result = activeGenerator.generate(new UIProgressMonitor(
-          "Generating workload", monitor));
-      result.toFile(fileName.toFile());
+      for(int i = 0; i < numberOfClones; i++)
+      {
+        SWFWorkload result = activeGenerator.generate(new UIProgressMonitor(
+            "Generating workload #" + i, monitor));
+
+        IPath newName = fileName;
+
+        if(i > 0)
+        {
+          String ext = fileName.getFileExtension();
+          newName = new Path(fileName.removeFileExtension().toOSString() + i).addFileExtension(ext);
+        }
+
+        result.toFile(newName.toFile());
+
+        if(!activeGenerator.canGenerateClones())
+        {
+          break;
+        }
+      }
     }
     catch(GRuntimeException e)
     {
@@ -180,6 +226,15 @@ public class WizardNewWorkloadCreationPage extends WizardPage implements
     generatorParamsPanel.layout();
 
     activeGenerator = genSel.getGenerator();
+
+    if(activeGenerator.canGenerateClones())
+    {
+      clonesCount.setEnabled(true);
+    }
+    else
+    {
+      clonesCount.setEnabled(false);
+    }
   }
 
   @Override
