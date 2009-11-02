@@ -1,0 +1,17 @@
+syntax: glob
+
+.metadata
+com.googlecode.gridme.diagram/bin
+com.googlecode.gridme.model/bin
+com.googlecode.gridme.model.edit/bin
+com.googlecode.gridme.runtime/bin
+com.googlecode.gridme.runtime.tests/bin
+com.googlecode.gridme.simstate/bin
+com.googlecode.gridme.simstate/bin2
+com.googlecode.gridme.simstate/lib-gen
+com.googlecode.gridme.simstate.diagram/bin
+com.googlecode.gridme.simstate.edit/bin
+com.googlecode.gridme.simstate.editor/bin
+com.googlecode.gridme.simstate.tests/bin
+com.googlecode.gridme.ui/bin
+
