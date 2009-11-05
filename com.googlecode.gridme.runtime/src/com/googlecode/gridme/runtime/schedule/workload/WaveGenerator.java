@@ -39,12 +39,12 @@ public class WaveGenerator implements WorkloadGenerator
     result.getComment().setValue(
         WorkloadComment.NOTE,
         "Generator: " + getName() + ", " + "Generation parameters: "
-            + "Density of serial tasks = " + pDensity + ", "
-            + "Maximum width of tasks = " + pMaxWidth + ", " + "Total time = "
-            + RuntimeUtils.formatTime(pTotalTime) + ", "
-            + "Maximum length of tasks =" + RuntimeUtils.formatTime(pMaxLength)
-            + "," + "Minimum length of tasks ="
-            + RuntimeUtils.formatTime(pMinLength));
+            + "Workload density=" + pDensity + ", "
+            + "Rate of serial tasks=" + pNonparalelRate + ", "
+            + "Maximum width of tasks=" + pMaxWidth + ", "
+            + "Workload length=" + RuntimeUtils.formatTime(pTotalTime) + ", "
+            + "Maximum length of tasks=" + RuntimeUtils.formatTime(pMaxLength) + ","
+            + "Minimum length of tasks="  + RuntimeUtils.formatTime(pMinLength));
 
     double eps = Math.exp((pMinLength-pMaxLength)/60000.0);
 
