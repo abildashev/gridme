@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
@@ -56,13 +56,10 @@ public class PowerAwareNode extends DedicatedNode
   // total cost of energy consumed
   private int totalWattsConsumedCost;
 
-  // Time limit since last wake up
-  private long wakeTimeout;
-
   // time since last check
   private long timeWattsCounterStarted;
 
-  // current consumption value 
+  // current consumption value
   private int currentWattsConsumption;
 
   private int powerOnCount;
@@ -72,9 +69,9 @@ public class PowerAwareNode extends DedicatedNode
   private long lastWakeUpTime;
 
   private float nightPowerCost;
-  
+
   public PowerAwareNode(String id, int wattsSleep, int wattsIdle,
-      int wattsBusy, int wattsWake, long wakeTimeout, float nightPowerCost)
+      int wattsBusy, int wattsWake, float nightPowerCost)
   {
     super(id);
     allowSignals(GTaskSignal.class, GTaskSignalWl.class,
@@ -84,7 +81,6 @@ public class PowerAwareNode extends DedicatedNode
     this.wattsIdle = wattsIdle;
     this.wattsBusy = wattsBusy;
     this.wattsWake = wattsWake;
-    this.wakeTimeout = wakeTimeout;
     this.nightPowerCost = nightPowerCost;
     powerS = new PowerSupply(PowerAwareCluster.DAY_START,
         PowerAwareCluster.DAY_END);
@@ -149,9 +145,9 @@ public class PowerAwareNode extends DedicatedNode
     return null;
   }
 
-  /** 
+  /**
    * Computes watts from the last state change, sets
-   * the new value for consumption and resets timer. 
+   * the new value for consumption and resets timer.
    */
   private void setnResetPower(int watts)
   {
@@ -256,11 +252,30 @@ public class PowerAwareNode extends DedicatedNode
   }
 
   /**
-   * @return true if this node can be powered on since last power on even.
+   *
    */
-  public boolean canPowerOn()
+  public long getTimeSinceLastWake()
   {
-    long timeout = getModel().getModelTime() - lastWakeUpTime;
-    return timeout > wakeTimeout;
+    return getModel().getModelTime() - lastWakeUpTime;
+  }
+
+  public int getWattsSleep()
+  {
+    return wattsSleep;
+  }
+
+  public int getWattsIdle()
+  {
+    return wattsIdle;
+  }
+
+  public int getWattsBusy()
+  {
+    return wattsBusy;
+  }
+
+  public int getWattsWake()
+  {
+    return wattsWake;
   }
 }

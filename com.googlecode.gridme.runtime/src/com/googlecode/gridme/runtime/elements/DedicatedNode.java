@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
@@ -32,10 +32,10 @@ import com.googlecode.gridme.runtime.schedule.impl.GTaskSignalWl;
 import com.googlecode.gridme.simstate.ActiveElement;
 
 /**
- * Dedicated node can execute only one task at 
+ * Dedicated node can execute only one task at
  * a given time moment. When the task is finished
- * the node can execute a new task. 
- * 
+ * the node can execute a new task.
+ *
  * The node accepts only {@link GTaskSignal} signals.
  * @see DedicatedNodeSTM state machine class and corresponding model.
  */
@@ -64,7 +64,7 @@ public class DedicatedNode extends ActiveElement implements GNode
   {
     return task != null;
   }
-  
+
   @Override
   public Object action(int id) throws Exception
   {
@@ -157,5 +157,10 @@ public class DedicatedNode extends ActiveElement implements GNode
     }
 
     return load + add;
+  }
+
+  public long getTimeSinceLastStateChange()
+  {
+    return getModel().getModelTime() - lastStateChangeTime;
   }
 }

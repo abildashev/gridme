@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
@@ -64,7 +64,6 @@ public class PowerAwareCluster extends BaseCluster
   private Integer wattsIdle;
   private Integer wattsBusy;
   private Integer wattsWake;
-  private Long wakeTimeout;
   private Integer nodesCount;
   private Float nightPowerCost;
   private boolean changed = false;
@@ -77,7 +76,7 @@ public class PowerAwareCluster extends BaseCluster
   private void initialize()
   {
     if(wattsSleep != null && wattsIdle != null && wattsBusy != null && nodesCount != null && wattsWake != null
-        && wakeTimeout != null && nightPowerCost != null)
+        && nightPowerCost != null)
     {
       childs.clear();
 
@@ -91,7 +90,7 @@ public class PowerAwareCluster extends BaseCluster
       for(int i = 0; i < nodesCount; i++)
       {
         addChild(new PowerAwareNode(getId() + "@" + i, wattsSleep / getPPN(), wattsIdle / getPPN(), wattsBusy
-            / getPPN(), wattsWake / getPPN(), wakeTimeout, nightPowerCost));
+            / getPPN(), wattsWake / getPPN(), nightPowerCost));
       }
     }
   }
@@ -151,9 +150,9 @@ public class PowerAwareCluster extends BaseCluster
     nightPowerCost = Float.parseFloat(value);
     initialize();
   }
-  
-  
-  
+
+
+
   @Parameter(description = "Number of cpu cores per node.", required = false, hasParams = false, category = 0)
   public void setPpn(String value) throws IllegalParameterException
   {
@@ -166,13 +165,6 @@ public class PowerAwareCluster extends BaseCluster
 
     setSMPCores(ppn);
 
-    initialize();
-  }
-
-  @Parameter(description = "Minimal time interval between two wake up events.", required = true, hasParams = false, category = 0)
-  public void setWakeTimeout(String value)
-  {
-    wakeTimeout = (long) Integer.parseInt(value);
     initialize();
   }
 

@@ -1,3 +1,24 @@
+/*******************************************************************************
+ * Copyright (c)  2009 Dmitry Grushin <dgrushin@gmail.com>
+ *
+ * This file is part of GridMe.
+ *
+ * GridMe is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * GridMe is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Contributors:
+ *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
+ ******************************************************************************/
 package com.googlecode.gridme.runtime.schedule.impl.power;
 
 import java.util.ArrayList;
@@ -18,6 +39,12 @@ import com.googlecode.gridme.runtime.schedule.GNodeGroup;
 import com.googlecode.gridme.runtime.schedule.GQueue;
 import com.googlecode.gridme.runtime.schedule.GTask;
 
+/**
+ * Basic implementation of cluster power manager. It computes total required width
+ * of cluster according to queue contents and then leaves this amount of nodes powered on.
+ * Implementation is SMP aware - nodes from one logical node (node group) will be powered on
+ * or off simultaneously.
+ */
 public abstract class TotalRequiredWidthPM implements ClusterPowerManager
 {
   protected PowerAwareCluster cluster;
@@ -40,8 +67,18 @@ public abstract class TotalRequiredWidthPM implements ClusterPowerManager
   protected abstract boolean mustExecute(GTask task);
 
   /**
-   * Computes W = total width of tasks in the queue for which mustExecute
-   * returns true. Leaves W number of nodes on.
+   * Returns true if this node can be powered on now.
+   */
+  protected abstract boolean canPowerOn(PowerAwareNode node);
+
+  /**
+   * Returns true if this node can be powered off now.
+   */
+  protected abstract boolean canPowerOff(PowerAwareNode node);
+
+  /**
+   * Computes total width of tasks in the queue for which mustExecute
+   * returns true. Leaves this number of nodes on.
    */
   @Override
   public Collection<LocalPowerManagementDecision> manage()
@@ -65,13 +102,13 @@ public abstract class TotalRequiredWidthPM implements ClusterPowerManager
 
   /**
    * Creates LocalPowerManagementDecision objects and appends them to the list.
-   * 
+   *
    * Depending on the value of widthRequired parameter for the given cluster:
    * <dl>
    * <li>switches nodes on if number of free nodes is less than widthRequired
    * <li>switches nodes off otherwise
    * </dl>
-   * 
+   *
    * @param decision
    *          - the list of decisions
    * @param onCount
@@ -90,12 +127,12 @@ public abstract class TotalRequiredWidthPM implements ClusterPowerManager
       for(Iterator<GNodeGroup> it = cluster.getSMPIterator(); it.hasNext() && nCount < onCount;)
       {
         GNodeGroup ng = it.next();
-        
+
         boolean groupOk = true;
         for(GNode nd : ng.getNodes())
         {
           PowerAwareNode node = (PowerAwareNode) nd;
-          groupOk = groupOk && node.isSleeping() && node.canPowerOn();
+          groupOk = groupOk && node.isSleeping() && canPowerOn(node);
         }
         if(groupOk)
         {
@@ -118,7 +155,16 @@ public abstract class TotalRequiredWidthPM implements ClusterPowerManager
         GNodeGroup ng = it.next();
         if(ng.isFree())
         {
-          ld.addNodes(ng.getNodes());
+          boolean groupOk = true;
+          for(GNode nd : ng.getNodes())
+          {
+            PowerAwareNode node = (PowerAwareNode) nd;
+            groupOk = groupOk && canPowerOff(node);
+          }
+          if(groupOk)
+          {
+            ld.addNodes(ng.getNodes());
+          }
         }
         nCount += ng.getNodes().size();
       }
