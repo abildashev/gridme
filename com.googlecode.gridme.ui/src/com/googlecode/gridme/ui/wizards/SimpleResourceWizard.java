@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
@@ -53,7 +53,7 @@ public abstract class SimpleResourceWizard extends Wizard implements INewWizard
   protected abstract String getTitle();
 
   protected abstract String getDescription();
-  
+
   protected abstract String getExt();
 
   protected abstract void createResource(IProgressMonitor monitor)
@@ -63,7 +63,7 @@ public abstract class SimpleResourceWizard extends Wizard implements INewWizard
   public void addPages()
   {
     super.addPages();
-    
+
     mainPage = new WizardNewFileCreationPage("filePage", selection)
     {
       @Override
@@ -88,7 +88,7 @@ public abstract class SimpleResourceWizard extends Wizard implements INewWizard
       {
         resourceName = mainPage.getContainerFullPath().append(mainPage.getFileName());
 
-        PlatformUI.getWorkbench().getProgressService().run(true, true,
+        getContainer().run(true, true,
             new IRunnableWithProgress()
             {
               public void run(IProgressMonitor monitor)

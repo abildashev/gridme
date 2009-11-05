@@ -174,21 +174,28 @@ public class WizardNewWorkloadCreationPage extends WizardPage implements
   {
     try
     {
-      for(int i = 0; i < numberOfClones; i++)
+      UIProgressMonitor wmon = new UIProgressMonitor("Generating workload", monitor);
+      if(numberOfClones > 0 && activeGenerator.canGenerateClones())
       {
-        SWFWorkload result = activeGenerator.generate(new UIProgressMonitor(
-            "Generating workload #" + i, monitor));
+        wmon.begin(numberOfClones * 2);
+      }
+      else
+      {
+        wmon.begin(IProgressMonitor.UNKNOWN);
+      }
 
+      for(int i = 0; i < numberOfClones && !monitor.isCanceled(); i++)
+      {
+        SWFWorkload result = activeGenerator.generate(wmon);
+        monitor.worked(1);
         IPath newName = fileName;
-
         if(i > 0)
         {
           String ext = fileName.getFileExtension();
           newName = new Path(fileName.removeFileExtension().toOSString() + i).addFileExtension(ext);
         }
-
         result.toFile(newName.toFile());
-
+        monitor.worked(1);
         if(!activeGenerator.canGenerateClones())
         {
           break;
@@ -200,7 +207,6 @@ public class WizardNewWorkloadCreationPage extends WizardPage implements
       GridmeUIPlugin.logException(e);
       return false;
     }
-
     monitor.done();
     return true;
   }

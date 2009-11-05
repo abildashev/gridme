@@ -47,8 +47,6 @@ public class SimpleGenerator implements WorkloadGenerator
   public SWFWorkload generate(ModelProgressMonitor monitor)
       throws GRuntimeException
   {
-    monitor.begin(rectLen * rectWidth);
-
     SWFWorkload result = new SWFWorkload();
 
     result.getComment().setValue(WorkloadComment.NOTE, "Generator: " +
@@ -68,7 +66,7 @@ public class SimpleGenerator implements WorkloadGenerator
     rand4 = new Random();
     int totalSqr = 0;
 
-    while(totalSqr < rectLen * rectWidth)
+    while(totalSqr < rectLen * rectWidth && !monitor.isCancelled())
     {
       int startTime = rand1.nextInt(length + 1);
       float fser = rand2.nextFloat();
@@ -83,7 +81,6 @@ public class SimpleGenerator implements WorkloadGenerator
       result.addTask(task);
 
       totalSqr += width * height;
-      monitor.progress(width * height);
     }
 
     return result;

@@ -20,7 +20,6 @@ public class WaveGenerator implements WorkloadGenerator
   public SWFWorkload generate(ModelProgressMonitor monitor)
       throws GRuntimeException
   {
-    monitor.begin(pTotalTime);
     SWFWorkload result = new SWFWorkload();
 
     //build in parameters
@@ -55,7 +54,7 @@ public class WaveGenerator implements WorkloadGenerator
         * pMaxWidth
         / (pNonparalelRate + (1.0f - pNonparalelRate) * (pMaxWidth + 2.0f)
             / 2.0f) / 4000.0f;
-    for(int i = 0; i < pTotalTime; i++)
+    for(int i = 0; i < pTotalTime && !monitor.isCancelled(); i++)
     {
       //	int k=(i/day_length)%7;
       if(rand.nextFloat() < freq
@@ -73,8 +72,6 @@ public class WaveGenerator implements WorkloadGenerator
 
         result.addTask(task);
       }
-
-      monitor.progress(i);
     }
 
     return result;
