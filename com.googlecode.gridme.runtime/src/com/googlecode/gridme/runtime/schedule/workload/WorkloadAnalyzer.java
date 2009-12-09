@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
@@ -66,7 +66,7 @@ public class WorkloadAnalyzer
   private File reportFolder;
 
   /**
-   * Each point can increase or decrease total width.   
+   * Each point can increase or decrease total width.
    */
   class PointWeight implements Comparable<PointWeight>
   {
@@ -123,7 +123,7 @@ public class WorkloadAnalyzer
     public void addValue(int size)
     {
       int i;
-      // the number of 1-CPU tasks is usually greater 
+      // the number of 1-CPU tasks is usually greater
       for(i = 0; i < sizes.length; i++)
       {
         if(size <= sizes[i])
@@ -178,6 +178,8 @@ public class WorkloadAnalyzer
   private long lastStartTime;
   // Last finish time
   private long lastFinishTime;
+  // Total square
+  private long totalSquare;
 
   // Width chart
   private XYSeries widthChartData;
@@ -201,7 +203,7 @@ public class WorkloadAnalyzer
     endPoints = new PriorityQueue<PointWeight>();
     this.wfile = file;
   }
-  
+
   /**
    * Adds a new task to the chart.
    */
@@ -274,7 +276,7 @@ public class WorkloadAnalyzer
   }
 
   /**
-   * 
+   *
    */
   public void analyze(ModelProgressMonitor monitor) throws Exception
   {
@@ -297,7 +299,7 @@ public class WorkloadAnalyzer
 
     monitor.begin(workloadLength);
 
-    // Handler for aggregate width 
+    // Handler for aggregate width
     widthDataHndl = new ReduceSequence(workloadLength / BIG_CHART_WIDTH)
     {
       @Override
@@ -339,6 +341,7 @@ public class WorkloadAnalyzer
       addTask(task.getStartTime(), (int) task.getRealExecutionTime(), task
           .getNodesMin());
       taskCount++;
+      totalSquare += task.getRealExecutionTime() * task.getNodesMin();
       cpuCount += task.getNodesMin();
       if(task.getStartTime() - time >= 3600)
       {
@@ -383,6 +386,8 @@ public class WorkloadAnalyzer
         + RuntimeUtils.formatTime(lastStartTime) + "</td></tr>");
     html.println("<tr><td>Last finish time:</td><td>"
         + RuntimeUtils.formatTime(lastFinishTime) + "</td></tr>");
+    html.println("<tr><td>Total square:</td><td>"
+        + totalSquare + "</td></tr>");
     html.println("</table>");
 
     // Total width chart
