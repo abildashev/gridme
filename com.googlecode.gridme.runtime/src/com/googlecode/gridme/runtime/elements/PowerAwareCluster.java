@@ -67,6 +67,7 @@ public class PowerAwareCluster extends BaseCluster
   private Integer nodesCount;
   private Float nightPowerCost;
   private boolean changed = false;
+  private Integer powerOnDelay = 0;
 
   // TODO: refactor stats report mechanism: create transparent framework for
   // registering and changing a metric value. Report metrics automatically.
@@ -90,7 +91,7 @@ public class PowerAwareCluster extends BaseCluster
       for(int i = 0; i < nodesCount; i++)
       {
         addChild(new PowerAwareNode(getId() + "@" + i, wattsSleep / getPPN(), wattsIdle / getPPN(), wattsBusy
-            / getPPN(), wattsWake / getPPN(), nightPowerCost));
+            / getPPN(), wattsWake / getPPN(), nightPowerCost, powerOnDelay));
       }
     }
   }
@@ -168,6 +169,13 @@ public class PowerAwareCluster extends BaseCluster
     initialize();
   }
 
+  @Parameter(description = "Time to get from off to idle state", required = false, hasParams = false, category = 0)
+  public void setPowerOnDelay(String value)
+  {
+    powerOnDelay = Integer.parseInt(value);
+    initialize();
+  }
+  
   public PowerAwareCluster(String id) throws GRuntimeException
   {
     super(id);

@@ -69,9 +69,11 @@ public class PowerAwareNode extends DedicatedNode
   private long lastWakeUpTime;
 
   private float nightPowerCost;
+  
+  private int powerOnDelay;
 
   public PowerAwareNode(String id, int wattsSleep, int wattsIdle,
-      int wattsBusy, int wattsWake, float nightPowerCost)
+      int wattsBusy, int wattsWake, float nightPowerCost, int powerOnDelay)
   {
     super(id);
     allowSignals(GTaskSignal.class, GTaskSignalWl.class,
@@ -82,6 +84,7 @@ public class PowerAwareNode extends DedicatedNode
     this.wattsBusy = wattsBusy;
     this.wattsWake = wattsWake;
     this.nightPowerCost = nightPowerCost;
+    this.powerOnDelay = powerOnDelay;
     powerS = new PowerSupply(PowerAwareCluster.DAY_START,
         PowerAwareCluster.DAY_END);
   }
@@ -141,6 +144,13 @@ public class PowerAwareNode extends DedicatedNode
         // Notify cluster that the node is free
         getParent().sendSignal(new GNodeFreeSignal(this, getParent()), this);
         break;
+        
+      case PowerAwareNodeSTM.ACTION_wakingUp:
+        setnResetPower(wattsIdle);
+        break;
+        
+      case PowerAwareNodeSTM.ACTION_getPowerOnDelay:
+        return new Integer(powerOnDelay);
     }
     return null;
   }

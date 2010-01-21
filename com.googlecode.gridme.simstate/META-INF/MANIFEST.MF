@@ -22,7 +22,8 @@ Export-Package: com.googlecode.gridme.simstate,
    statemachine"
 Require-Bundle: org.openarchitectureware.dependencies,
  org.eclipse.ui,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources
 Eclipse-LazyStart: true
 Bundle-Activator: com.googlecode.gridme.simstate.SimStatePlugin
 Bundle-ClassPath: .
