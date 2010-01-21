@@ -23,6 +23,8 @@ package com.googlecode.gridme.runtime;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
 
@@ -171,6 +173,18 @@ public class RuntimeUtils
   public static String getResultFileName(String experiment, String run)
   {
     return experiment + "." + run + ".gstats";
+  }
+
+  public static String getRunNameFromFileName(String experiment, String runFileName)
+  {
+    Pattern p = Pattern.compile(experiment + "\\.(.+)\\.gstats");
+    Matcher matcher = p.matcher(runFileName);
+    if(!matcher.matches())
+    {
+      throw new IllegalStateException("Incorrect run scenario name: " + runFileName);
+    }
+    
+    return matcher.group(1); 
   }
   
   /**

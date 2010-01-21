@@ -190,7 +190,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         for(Object item : dlg.getResult())
         {
           RunResult input = GexperimentFactoryImpl.eINSTANCE.createRunResult();
-          input.setName((String) item);
+          input.setName(RuntimeUtils.getResultFileName(
+              RuntimeUtils.removeExtension(modelRootFile.getName()), (String) item));
           selectedVisualizer.getInput().add(input);
           addVisualizerInput(input);
         }
@@ -1149,12 +1150,11 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
     for(Run run : modelRoot.getRuns())
     {
-      String name = RuntimeUtils.getResultFileName(RuntimeUtils
-          .removeExtension(modelRootFile.getName()), run.getName());
+      String name = RuntimeUtils.getResultFileName(getExperimentName(), run.getName());
 
       if(findFile(name).exists() && notInInputList(name))
       {
-        result.add(name);
+        result.add(run.getName());
       }
     }
 
@@ -1182,13 +1182,18 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   {
     TableItem item = new TableItem(visualizerInputList, SWT.NONE);
     item.setData(input);
-    item.setText(new String[] { input.getName() });
+    item.setText(new String[] { RuntimeUtils.getRunNameFromFileName(getExperimentName(), input.getName()) });
 
     if(!findFile(input.getName()).exists())
     {
       item.setForeground(item.getParent().getShell().getDisplay()
           .getSystemColor(SWT.COLOR_RED));
     }
+  }
+
+  private String getExperimentName()
+  {
+    return RuntimeUtils.removeExtension(modelRootFile.getName());
   }
 
   private Collection<String> getAvailableMetrics(String element)
@@ -1293,8 +1298,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         DateFormat.getDateTimeInstance().format(c.getTime()), run.getLength(),
         RuntimeUtils.cutString(run.getDescription(), 50) });
 
-    String name = RuntimeUtils.getResultFileName(RuntimeUtils
-        .removeExtension(modelRootFile.getName()), run.getName());
+    String name = RuntimeUtils.getResultFileName(getExperimentName(), run.getName());
 
     if(!findFile(name).exists())
     {
@@ -1761,7 +1765,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     File base = new File(modelRootFile.getProject().getLocation()
         .toPortableString());
 
-    String resultsName = RuntimeUtils.removeExtension(modelRootFile.getName())
+    String resultsName = getExperimentName()
         + "." + run.getName();
 
     Calendar startTime = Calendar.getInstance();
@@ -2468,7 +2472,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     visualizerInputList.setEnabled(false);
     TableColumn scenarioName = new TableColumn(visualizerInputList, SWT.NONE);
     scenarioName.setWidth(200);
-    scenarioName.setText("Run scenario name");
+    scenarioName.setText("Run scenario results");
 
     MenuManager popupMenu = new MenuManager();
     popupMenu.setRemoveAllWhenShown(true);
@@ -2614,7 +2618,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     File base = new File(modelRootFile.getProject().getLocation()
         .toPortableString());
 
-    String vname = RuntimeUtils.removeExtension(modelRootFile.getName()) + "."
+    String vname = getExperimentName() + "."
         + visual.getName();
 
     final String vresultsPath = new File(base, vname).getAbsolutePath();
