@@ -1,21 +1,21 @@
 /*******************************************************************************
- * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
- * 
+l * Copyright (c) 2009 Dmitry Grushin <dgrushin@gmail.com>.
+ *
  * This file is part of GridMe.
- * 
+ *
  * GridMe is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * GridMe is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GridMe.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Dmitry Grushin <dgrushin@gmail.com> - initial API and implementation
  ******************************************************************************/
@@ -23,6 +23,9 @@ package com.googlecode.gridme.runtime.visual.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -98,9 +101,10 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
       throws Exception
   {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
     int total = logList.size() * charts.size();
-
+    PrintWriter txtOut = new PrintWriter(new File(resultPath + ".txt"));
+    NumberFormat fmt = new DecimalFormat();
+    fmt.setMaximumFractionDigits(3);
     monitor.begin(total);
 
     for(LogEntry entry : logList)
@@ -135,8 +139,11 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
             + entry.getLog().getMetricsDescription(chart.getMetricSpec()),
             entry.getName());
 
+        txtOut.println(fmt.format(value));
+
         monitor.progress(1);
       }
+      txtOut.println();
     }
 
     JFreeChart barChart = ChartFactory.createBarChart(name + " ["
@@ -168,5 +175,6 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
         + ".png")), barChart, getImgWidth(), getImgHeight());
 
     monitor.done();
+    txtOut.close();
   }
 }
