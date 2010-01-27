@@ -48,4 +48,9 @@ public interface MetricsLogger
    * Logs manifest data
    */
   public void setManifest(LogManifest man) throws GRuntimeException;
+  
+  /**
+   * 
+   */
+  public void logParameter(String param, String value);
 }

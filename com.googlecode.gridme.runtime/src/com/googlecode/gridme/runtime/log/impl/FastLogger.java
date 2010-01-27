@@ -27,6 +27,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
@@ -44,12 +46,14 @@ import com.googlecode.gridme.runtime.log.StaticProperty;
  *    <li> Zip entry with index data INDEX_NAME
  *    <li> Zip entry with properties PROPERTIES_NAME
  *    <li> Zip entry with manifest MANIFEST_NAME
+ *    <li> Zip entry with series parameters PARAMS_NAME
  *  </ol>
  *  
  *  Data format is the following: {ElementId,MetricsName,Value,Time}
  *  Index format: {ElementId,MetricsName,Record Count,Metrics description}
  *  Properties format: {ElementId,PropertyName,Value}
  *  Manifest format: {Experiment description,Timezone,Time in millis} 
+ *  Params format: {param=value}
  */
 public class FastLogger extends TextBasedLogger implements MetricsLogger
 {
@@ -57,6 +61,7 @@ public class FastLogger extends TextBasedLogger implements MetricsLogger
   public static final String INDEX_NAME = "index";
   public static final String PROPERTIES_NAME = "properties";
   public static final String MANIFEST_NAME = "manifest";
+  public static final String PARAMS_NAME = "params";
 
   /**
    * Index record
@@ -103,6 +108,7 @@ public class FastLogger extends TextBasedLogger implements MetricsLogger
   private HashMap<String, IndexEntry> indexTab;
   private ArrayList<StaticProperty> properties;
   private LogManifest manifest;
+  private List<String[]> params; 
 
   /**
    * Creates a new instance of the logger.
@@ -116,6 +122,7 @@ public class FastLogger extends TextBasedLogger implements MetricsLogger
 
     properties = new ArrayList<StaticProperty>();
     indexTab = new HashMap<String, IndexEntry>(200);
+    params = new ArrayList<String[]>();
   }
 
   @Override
@@ -149,6 +156,8 @@ public class FastLogger extends TextBasedLogger implements MetricsLogger
     }
   }
 
+  
+  
   /**
    * Releases resources occupied by the logger.
    * @throws LoggerException 
@@ -180,6 +189,12 @@ public class FastLogger extends TextBasedLogger implements MetricsLogger
             + URLEncoder.encode(manifest.getStartTime().getTimeZone().getID(),
                 ENCODING) + "," + manifest.getStartTime().getTimeInMillis());
       }
+      // Write parameters
+      zippo.putNextEntry(new ZipEntry(PARAMS_NAME));
+      for(String[] param: params)
+      {
+        out.println(URLEncoder.encode(param[0], ENCODING) + "=" + URLEncoder.encode(param[1], ENCODING));
+      }
     }
     catch(IOException e)
     {
@@ -193,5 +208,11 @@ public class FastLogger extends TextBasedLogger implements MetricsLogger
   public void setManifest(LogManifest man) throws GRuntimeException
   {
     this.manifest = man;
+  }
+
+  @Override
+  public void logParameter(String param, String value)
+  {
+    params.add(new String[]{param, value});
   }
 }

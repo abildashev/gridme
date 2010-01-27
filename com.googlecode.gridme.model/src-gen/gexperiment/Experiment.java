@@ -47,6 +47,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link gexperiment.Experiment#getParameterValues <em>Parameter Values</em>}</li>
  *   <li>{@link gexperiment.Experiment#getRuns <em>Runs</em>}</li>
  *   <li>{@link gexperiment.Experiment#getVisualizers <em>Visualizers</em>}</li>
+ *   <li>{@link gexperiment.Experiment#getSeries <em>Series</em>}</li>
  * </ul>
  * </p>
  *
@@ -185,5 +186,21 @@ public interface Experiment extends EObject
    * @generated
    */
   EList<Visualizer> getVisualizers();
+
+  /**
+   * Returns the value of the '<em><b>Series</b></em>' containment reference list.
+   * The list contents are of type {@link gexperiment.SeriesParameter}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Series</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Series</em>' containment reference list.
+   * @see gexperiment.GexperimentPackage#getExperiment_Series()
+   * @model containment="true"
+   * @generated
+   */
+  EList<SeriesParameter> getSeries();
 
 } // Experiment

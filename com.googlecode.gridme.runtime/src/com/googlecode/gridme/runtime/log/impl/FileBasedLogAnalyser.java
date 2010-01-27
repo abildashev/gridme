@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
@@ -463,5 +464,33 @@ public class FileBasedLogAnalyser extends ZipLogAnalyser implements LogAnalyser
   public Calendar getCalendarStartTime() throws GRuntimeException
   {
     return getManifest().getStartTime();
+  }
+
+  @Override
+  public Map<String, String> getParameterValues() throws GRuntimeException
+  {
+    HashMap<String,String> params = new HashMap<String, String>();
+    
+    try
+    {
+      BufferedReader input = getDataReader(5);
+      while(input.ready())
+      {
+        String line = input.readLine();
+        if(line == null)
+        {
+          break;
+        }
+        String[] tk = line.split("=");
+        params.put(URLDecoder.decode(tk[0], FastLogger.ENCODING), URLDecoder.decode(tk[1], FastLogger.ENCODING));
+      }
+      input.close();
+    }
+    catch(Exception e)
+    {
+      throw new LoggerException("Parameter list read error " + path.getAbsolutePath(), e);
+    }
+    
+    return params;
   }
 }

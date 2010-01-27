@@ -23,6 +23,7 @@ package com.googlecode.gridme.runtime.log;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
 
@@ -95,4 +96,7 @@ public interface LogAnalyser
       throws GRuntimeException;
 
   public Calendar getCalendarStartTime() throws GRuntimeException;
+  
+  
+  public Map<String,String> getParameterValues() throws GRuntimeException;
 }

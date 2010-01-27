@@ -27,6 +27,7 @@ import gexperiment.ParameterValue;
 import gexperiment.Run;
 import gexperiment.RunMode;
 import gexperiment.RunResult;
+import gexperiment.SeriesParameter;
 import gexperiment.Visualizer;
 import gexperiment.impl.GexperimentFactoryImpl;
 import gmodel.GenericModelElement;
@@ -37,6 +38,7 @@ import gmodel.RParameter;
 import gmodel.impl.GmodelFactoryImpl;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -48,10 +50,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.tools.ant.taskdefs.Sleep;
 import org.aspencloud.widgets.ACW;
 import org.aspencloud.widgets.cdatepicker.CDatepickerCombo;
 import org.eclipse.core.resources.IFile;
@@ -64,6 +70,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -84,6 +92,8 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -106,6 +116,7 @@ import com.googlecode.gridme.runtime.Parameter;
 import com.googlecode.gridme.runtime.RuntimeUtils;
 import com.googlecode.gridme.runtime.exceptions.GExecException;
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
+import com.googlecode.gridme.runtime.exceptions.LoggerException;
 import com.googlecode.gridme.runtime.log.GanttLogger;
 import com.googlecode.gridme.runtime.log.LogManifest;
 import com.googlecode.gridme.runtime.log.MetricsLogger;
@@ -131,8 +142,7 @@ import com.googlecode.gridme.ui.PlatformUtils;
 import com.googlecode.gridme.ui.UIErrorLogger;
 import com.googlecode.gridme.ui.UIProgressMonitor;
 
-public class ExperimentEditor extends MultiPageEditorPart implements
-    ModifyListener, SelectionListener
+public class ExperimentEditor extends MultiPageEditorPart implements ModifyListener, SelectionListener
 {
   class DelInputAction extends Action
   {
@@ -178,11 +188,12 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     @Override
     public void run()
     {
-      ElementListSelectionDialog dlg = new ElementListSelectionDialog(
-          visualizerInputList.getShell(), new LabelProvider());
+      ElementListSelectionDialog dlg = new ElementListSelectionDialog(visualizerInputList.getShell(),
+          new LabelProvider());
+      dlg.setTitle("Select run results files");
       dlg.setFilter("*");
       dlg.setIgnoreCase(true);
-      dlg.setElements(getAvailableInputs().toArray());
+      dlg.setElements(getAvailableInputs());
       dlg.setMultipleSelection(true);
 
       if(dlg.open() == Window.OK && dlg.getResult() != null)
@@ -190,8 +201,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         for(Object item : dlg.getResult())
         {
           RunResult input = GexperimentFactoryImpl.eINSTANCE.createRunResult();
-          input.setName(RuntimeUtils.getResultFileName(
-              RuntimeUtils.removeExtension(modelRootFile.getName()), (String) item));
+          input.setName((String) item);
           selectedVisualizer.getInput().add(input);
           addVisualizerInput(input);
         }
@@ -213,8 +223,9 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     {
       String element = null;
 
-      ElementListSelectionDialog dlg = new ElementListSelectionDialog(
-          visualizerElementsList.getShell(), new LabelProvider());
+      ElementListSelectionDialog dlg = new ElementListSelectionDialog(visualizerElementsList.getShell(),
+          new LabelProvider());
+      dlg.setTitle("Select element");
       dlg.setFilter("*");
       dlg.setIgnoreCase(true);
       dlg.setElements(getAvailableElements().toArray());
@@ -223,14 +234,14 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         @Override
         public IStatus validate(Object[] selection)
         {
-          return new StatusInfo(IStatus.INFO,
-              getMetricsDescription((String) selection[0]));
+          return new StatusInfo(IStatus.INFO, getMetricsDescription((String) selection[0]));
         }
       });
 
       if(dlg.open() == Window.OK && dlg.getFirstResult() != null)
       {
         element = (String) dlg.getFirstResult();
+        dlg.setTitle("Select metric");
         dlg.setElements(getAvailableMetrics(element).toArray());
         if(dlg.open() == Window.OK && dlg.getFirstResult() != null)
         {
@@ -437,8 +448,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       dta = new GridData(GridData.FILL_HORIZONTAL);
       lab.setLayoutData(dta);
       lab.setText("Description:");
-      description = new Text(panel, SWT.BORDER | SWT.WRAP | SWT.MULTI
-          | SWT.H_SCROLL | SWT.V_SCROLL);
+      description = new Text(panel, SWT.BORDER | SWT.WRAP | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
       dta = new GridData(GridData.FILL_HORIZONTAL);
       dta.heightHint = 120;
       description.setLayoutData(dta);
@@ -477,7 +487,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         startTime = new CDatepickerCombo(panel, ACW.NONE);
       }
       startTime.setFormat(ACW.DATE_LONG | ACW.TIME_MEDIUM);
-      //startTime.getCDatepicker().setGridVisible(true);
+      // startTime.getCDatepicker().setGridVisible(true);
       dta = new GridData(GridData.FILL_HORIZONTAL);
       startTime.setLayoutData(dta);
 
@@ -515,7 +525,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         name.setEnabled(false);
         description.setEnabled(false);
       }
-      
+
       validatePage();
     }
 
@@ -664,8 +674,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       @Override
       public void run()
       {
-        ElementListSelectionDialog dlg = new ElementListSelectionDialog(
-            getShell(), new LabelProvider());
+        ElementListSelectionDialog dlg = new ElementListSelectionDialog(getShell(), new LabelProvider());
 
         dlg.setFilter("*");
         dlg.setIgnoreCase(true);
@@ -675,15 +684,13 @@ public class ExperimentEditor extends MultiPageEditorPart implements
           @Override
           public IStatus validate(Object[] selection)
           {
-            return new StatusInfo(IStatus.INFO,
-                ((VisualizerParamInfo) selection[0]).getDescription());
+            return new StatusInfo(IStatus.INFO, ((VisualizerParamInfo) selection[0]).getDescription());
           }
         });
 
         if(dlg.open() == Window.OK && dlg.getFirstResult() != null)
         {
-          VisualizerParamInfo selParam = (VisualizerParamInfo) dlg
-              .getFirstResult();
+          VisualizerParamInfo selParam = (VisualizerParamInfo) dlg.getFirstResult();
           addParamIntoTab(selParam);
         }
       }
@@ -697,8 +704,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
           boolean contains = false;
           for(TableItem t : paramList.getItems())
           {
-            if(((VisualizerParamInfo) t.getData()).getName().equals(
-                info.getName()))
+            if(((VisualizerParamInfo) t.getData()).getName().equals(info.getName()))
             {
               contains = true;
               break;
@@ -759,8 +765,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
       if(!isAdmissibleParameter(par))
       {
-        item.setForeground(getShell().getDisplay()
-            .getSystemColor(SWT.COLOR_RED));
+        item.setForeground(getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
       }
     }
 
@@ -792,9 +797,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
       try
       {
-        //        Class cls = Class.forName(implementation.getText());
-        Class cls = ImplScanner.getInstance().getClassLoader().loadClass(
-            implementation.getText());
+        // Class cls = Class.forName(implementation.getText());
+        Class cls = ImplScanner.getInstance().getClassLoader().loadClass(implementation.getText());
 
         Method[] mtds = cls.getMethods();
         for(Method method : mtds)
@@ -802,8 +806,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
           Parameter param = method.getAnnotation(Parameter.class);
           if(param != null)
           {
-            result.add(new VisualizerParamInfo(RuntimeUtils
-                .getParameterName(method.getName()), param.description()));
+            result.add(new VisualizerParamInfo(RuntimeUtils.getParameterName(method.getName()), param.description()));
           }
         }
       }
@@ -834,8 +837,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       return name.getText();
     }
 
-    protected VisualizerWizardPage(String pageName, boolean full,
-        Visualizer visual)
+    protected VisualizerWizardPage(String pageName, boolean full, Visualizer visual)
     {
       super(pageName);
       this.full = full;
@@ -883,8 +885,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       lab.setText("Implementation:");
       implementation = new Combo(panel, SWT.DROP_DOWN);
       dta = new GridData(GridData.FILL_HORIZONTAL);
-      implementationDeco = createErrorDecorator(implementation,
-          "Enter a valid implementation");
+      implementationDeco = createErrorDecorator(implementation, "Enter a valid implementation");
       implementation.setLayoutData(dta);
       implementation.addModifyListener(new ModifyListener()
       {
@@ -940,8 +941,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       pValue.setText("Value");
 
       paramListEditor = new TableEditor(paramList);
-      //The editor must have the same size as the cell and must
-      //not be any smaller than 50 pixels.
+      // The editor must have the same size as the cell and must
+      // not be any smaller than 50 pixels.
       paramListEditor.horizontalAlignment = SWT.LEFT;
       paramListEditor.grabHorizontal = true;
       paramListEditor.minimumWidth = 50;
@@ -960,8 +961,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
           if(item == null)
             return;
 
-          statusMessage.setText((((VisualizerParamInfo) item.getData())
-              .getDescription()));
+          statusMessage.setText((((VisualizerParamInfo) item.getData()).getDescription()));
 
           // The control that will be the editor must be a child of the Table
           Text newEditor = new Text(paramList, SWT.NONE);
@@ -973,8 +973,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
               Text text = (Text) paramListEditor.getEditor();
               String value = text.getText();
               paramListEditor.getItem().setText(EDITABLECOLUMN, value);
-              ((VisualizerParamInfo) paramListEditor.getItem().getData())
-                  .setValue(value);
+              ((VisualizerParamInfo) paramListEditor.getItem().getData()).setValue(value);
             }
           });
           newEditor.selectAll();
@@ -1017,7 +1016,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         stopTime.setText(visual.getStopTime());
         buildParamList();
       }
-      
+
       validatePage();
     }
 
@@ -1062,9 +1061,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
       try
       {
-        //Class.forName(implementation.getText());
-        ImplScanner.getInstance().getClassLoader().loadClass(
-            implementation.getText());
+        // Class.forName(implementation.getText());
+        ImplScanner.getInstance().getClassLoader().loadClass(implementation.getText());
       }
       catch(Exception e)
       {
@@ -1139,38 +1137,36 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   private Table visualizerElementsList;
   private Table visualizerInputList;
   private Visualizer selectedVisualizer;
+  private Table seriesParamList;
+  private HashMap<String, String> currentSerieParameters;
 
   public ExperimentEditor()
   {
+    currentSerieParameters = new HashMap<String, String>();
   }
 
-  private List<String> getAvailableInputs()
+  private String[] getAvailableInputs()
   {
-    ArrayList<String> result = new ArrayList<String>();
-
-    for(Run run : modelRoot.getRuns())
+    FileFilter filter = new FileFilter()
     {
-      String name = RuntimeUtils.getResultFileName(getExperimentName(), run.getName());
-
-      if(findFile(name).exists() && notInInputList(name))
+      Pattern pat = Pattern.compile(RuntimeUtils.getRunFilePattern(getExperimentName()));
+      
+      @Override
+      public boolean accept(File pathname)
       {
-        result.add(run.getName());
+        Matcher m = pat.matcher(pathname.getName());
+        return m.matches();
       }
-    }
-
-    return result;
-  }
-
-  private boolean notInInputList(String name)
-  {
-    for(TableItem existing : visualizerInputList.getItems())
+    };
+    
+    File[] files = modelRootFile.getParent().getLocation().toFile().listFiles(filter);
+    String[] names = new String[files.length];
+    for(int i = 0; i < files.length; i++)
     {
-      if(((RunResult) existing.getData()).getName().equals(name))
-      {
-        return false;
-      }
+      names[i] = files[i].getName();
     }
-    return true;
+    
+    return names;
   }
 
   private IFile findFile(String name)
@@ -1182,13 +1178,26 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   {
     TableItem item = new TableItem(visualizerInputList, SWT.NONE);
     item.setData(input);
-    item.setText(new String[] { RuntimeUtils.getRunNameFromFileName(getExperimentName(), input.getName()) });
-
-    if(!findFile(input.getName()).exists())
+    StringBuilder params = new StringBuilder();
+    File base = new File(modelRootFile.getProject().getLocation().toPortableString());
+    try
     {
-      item.setForeground(item.getParent().getShell().getDisplay()
-          .getSystemColor(SWT.COLOR_RED));
+      FileBasedLogAnalyser log = new FileBasedLogAnalyser(new File(base, input.getName()));
+      Map<String,String> pvals = log.getParameterValues();
+      for(Iterator<String> it = pvals.keySet().iterator(); it.hasNext();)
+      {
+        String key = it.next();
+        params.append(key + "=" + pvals.get(key));
+        if(it.hasNext())
+        {
+          params.append(",");
+        }
+      }
     }
+    catch(GRuntimeException e)
+    {
+    }
+    item.setText(new String[] { input.getName(), params.toString() } );
   }
 
   private String getExperimentName()
@@ -1262,8 +1271,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   private ControlDecoration createErrorDecorator(Control field, String message)
   {
     ControlDecoration deco = new ControlDecoration(field, SWT.LEFT);
-    deco.setImage(FieldDecorationRegistry.getDefault().getFieldDecoration(
-        FieldDecorationRegistry.DEC_ERROR).getImage());
+    deco
+        .setImage(FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage());
     deco.setDescriptionText(message);
     deco.hide();
     return deco;
@@ -1294,17 +1303,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     Calendar c = Calendar.getInstance();
     c.setTimeZone(TimeZone.getTimeZone(run.getTimezone()));
     c.setTimeInMillis(Long.parseLong(run.getStartRealTime()));
-    item.setText(new String[] { run.getName(),
-        DateFormat.getDateTimeInstance().format(c.getTime()), run.getLength(),
+    item.setText(new String[] { run.getName(), DateFormat.getDateTimeInstance().format(c.getTime()), run.getLength(),
         RuntimeUtils.cutString(run.getDescription(), 50) });
-
-    String name = RuntimeUtils.getResultFileName(getExperimentName(), run.getName());
-
-    if(!findFile(name).exists())
-    {
-      item.setForeground(item.getParent().getShell().getDisplay()
-          .getSystemColor(SWT.COLOR_RED));
-    }
   }
 
   private void buildRunList(Table runList)
@@ -1319,8 +1319,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   {
     try
     {
-      modelRootFile.deleteMarkers(IMarker.PROBLEM, true,
-          IResource.DEPTH_INFINITE);
+      modelRootFile.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
     }
     catch(CoreException markerErr)
     {
@@ -1328,27 +1327,24 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     }
   }
 
-  private com.googlecode.gridme.runtime.ModelElement createElementInstance(
-      ModelElement elem) throws GRuntimeException
+  private com.googlecode.gridme.runtime.ModelElement createElementInstance(ModelElement elem) throws GRuntimeException
   {
     Class[] argsClass = new Class[] { String.class };
     Object[] args = new Object[] { elem.getName() };
     com.googlecode.gridme.runtime.ModelElement result;
     try
     {
-      //      Constructor cons = Class.forName(elem.getImplementation())
-      //          .getConstructor(argsClass);
+      // Constructor cons = Class.forName(elem.getImplementation())
+      // .getConstructor(argsClass);
 
-      Constructor cons = ImplScanner.getInstance().getClassLoader().loadClass(
-          elem.getImplementation()).getConstructor(argsClass);
+      Constructor cons = ImplScanner.getInstance().getClassLoader().loadClass(elem.getImplementation()).getConstructor(
+          argsClass);
 
-      result = (com.googlecode.gridme.runtime.ModelElement) cons
-          .newInstance(args);
+      result = (com.googlecode.gridme.runtime.ModelElement) cons.newInstance(args);
     }
     catch(Exception e)
     {
-      throw new GRuntimeException("Unable to load implementation class: "
-          + elem.getImplementation());
+      throw new GRuntimeException("Unable to load implementation class: " + elem.getImplementation());
     }
     return result;
   }
@@ -1376,15 +1372,13 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     new Label(page, SWT.NONE).setText("Description:");
 
     // Description
-    descr = new Text(page, SWT.BORDER | SWT.WRAP | SWT.MULTI | SWT.H_SCROLL
-        | SWT.V_SCROLL);
+    descr = new Text(page, SWT.BORDER | SWT.WRAP | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
     dta = new GridData(GridData.FILL_HORIZONTAL);
     dta.horizontalSpan = 3;
     dta.heightHint = 150;
 
     descr.setLayoutData(dta);
-    descr.setText(modelRoot.getDescription() != null ? modelRoot
-        .getDescription() : "");
+    descr.setText(modelRoot.getDescription() != null ? modelRoot.getDescription() : "");
     descr.addModifyListener(this);
 
     // Run mode
@@ -1399,7 +1393,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     }
     debugMode.addSelectionListener(this);
 
-    //Model
+    // Model
     new Label(page, SWT.NONE).setText("Grid model:");
     gmodel = new Text(page, SWT.BORDER | SWT.READ_ONLY);
     dta = new GridData(GridData.FILL_HORIZONTAL);
@@ -1407,30 +1401,25 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     gmodel.setLayoutData(dta);
     Button browse = new Button(page, SWT.NONE);
     browse.setText("Select");
-    modelDeco = createErrorDecorator(gmodel,
-        "Unable to load specified Grid model");
+    modelDeco = createErrorDecorator(gmodel, "Unable to load specified Grid model");
     browse.addSelectionListener(new SelectionAdapter()
     {
       @Override
       public void widgetSelected(SelectionEvent e)
       {
-        FilteredResourcesSelectionDialog dlg = new FilteredResourcesSelectionDialog(
-            page.getShell(), false, ResourcesPlugin.getWorkspace().getRoot(),
-            IResource.FILE);
+        FilteredResourcesSelectionDialog dlg = new FilteredResourcesSelectionDialog(page.getShell(), false,
+            ResourcesPlugin.getWorkspace().getRoot(), IResource.FILE);
         dlg.setInitialPattern("*.gmm");
         dlg.setTitle("Select model");
 
         if(dlg.open() == Window.OK && dlg.getResult() != null)
         {
-          boolean load = !experimentParameters.isModified()
-              && !expHasUserDefinedParams;
+          boolean load = !experimentParameters.isModified() && !expHasUserDefinedParams;
           if(!load)
           {
-            MessageBox messageBox = new MessageBox(page.getShell(),
-                SWT.ICON_WARNING | SWT.YES | SWT.NO);
+            MessageBox messageBox = new MessageBox(page.getShell(), SWT.ICON_WARNING | SWT.YES | SWT.NO);
             messageBox.setText("Warning");
-            messageBox.setMessage("Changes to experiment parameters "
-                + "will be lost. Continue?");
+            messageBox.setMessage("Changes to experiment parameters " + "will be lost. Continue?");
             if(messageBox.open() == SWT.YES)
             {
               load = true;
@@ -1438,12 +1427,10 @@ public class ExperimentEditor extends MultiPageEditorPart implements
           }
           if(load)
           {
-            gmodel.setText(((IFile) dlg.getResult()[0]).getFullPath()
-                .makeRelative().toString());
+            gmodel.setText(((IFile) dlg.getResult()[0]).getFullPath().makeRelative().toString());
             pageModified();
             expHasUserDefinedParams = false;
-            experimentParameters.reloadInput(modelRoot.getModel(), modelRoot
-                .getParameterValues());
+            experimentParameters.reloadInput(modelRoot.getModel(), modelRoot.getParameterValues());
           }
         }
       }
@@ -1454,10 +1441,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     dta = new GridData(GridData.FILL_BOTH);
     dta.horizontalSpan = 4;
 
-    experimentParameters = new ParameterTreeTable(page, dta, this, false,
-        modelRootFile.getProject());
-    experimentParameters.setInput(modelRoot.getModel(), modelRoot
-        .getParameterValues());
+    experimentParameters = new ParameterTreeTable(page, dta, this, false, modelRootFile.getProject());
+    experimentParameters.setInput(modelRoot.getModel(), modelRoot.getParameterValues());
 
     page.pack();
     validatePage();
@@ -1554,8 +1539,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         selectedRun = getSelectedRun();
         if(selectedRun != null)
         {
-          runParameters.reloadInput(modelRoot.getModel(), selectedRun
-              .getParameterValues());
+          runParameters.reloadInput(modelRoot.getModel(), selectedRun.getParameterValues());
           runParameters.setEnabled(true);
           updateRunInTable(selectedRun);
         }
@@ -1585,8 +1569,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       public void widgetSelected(SelectionEvent event)
       {
         if(isRunSelected()
-            && PlatformUtils.askYesNo("Confirm delete", "Delete "
-                + runList.getSelectionCount() + " scenarios?"))
+            && PlatformUtils.askYesNo("Confirm delete", "Delete " + runList.getSelectionCount() + " scenarios?"))
         {
           for(TableItem item : runList.getSelection())
           {
@@ -1619,7 +1602,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         cloneRun();
       }
     });
-    
+
     Button execButton = new Button(page, SWT.NONE);
     execButton.setText("Execute");
 
@@ -1634,27 +1617,25 @@ public class ExperimentEditor extends MultiPageEditorPart implements
           {
             if(runList.getSelectionCount() > 1)
             {
-              if(PlatformUtils.askYesNo("Confirm launch", "Launch "
-                  + runList.getSelectionCount() + " scenarios?"))
+              if(PlatformUtils.askYesNo("Confirm launch", "Launch " + runList.getSelectionCount() + " scenarios?"))
               {
                 for(TableItem item : runList.getSelection())
                 {
-                  executeRun((Run) item.getData());
+                  executeRunSeries((Run) item.getData());
                   updateRunInTable((Run) item.getData());
-                }
+                } 
               }
             }
             else
             {
-              executeRun(selectedRun);
+              executeRunSeries(selectedRun);
               updateRunInTable(selectedRun);
             }
           }
         }
         catch(GRuntimeException e)
         {
-          PlatformUtils.showErrorMessage("Execution failed", e
-              .getUserMessageString());
+          PlatformUtils.showErrorMessage("Execution failed", e.getUserMessageString());
           GridmeUIPlugin.logException(e);
         }
       }
@@ -1694,8 +1675,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     dta.horizontalSpan = 7;
 
     // Add parameters editor
-    runParameters = new ParameterTreeTable(page, dta, this, false,
-        modelRootFile.getProject());
+    runParameters = new ParameterTreeTable(page, dta, this, false, modelRootFile.getProject());
     runParameters.setEnabled(false);
 
     page.pack();
@@ -1725,12 +1705,12 @@ public class ExperimentEditor extends MultiPageEditorPart implements
    */
   private void copyRun(Run run, Run source)
   {
-    run.setName("Copy of " + source.getName()); 
+    run.setName("Copy of " + source.getName());
     run.setDescription(source.getDescription());
     run.setLength(source.getLength());
     run.setStartRealTime(source.getStartRealTime());
     run.setTimezone(source.getTimezone());
-    
+
     for(ParameterValue par : source.getParameterValues())
     {
       ParameterValue npar = GexperimentFactoryImpl.eINSTANCE.createParameterValue();
@@ -1746,41 +1726,71 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     {
       RParameter pdst = GmodelFactoryImpl.eINSTANCE.createRParameter();
       dstList.add(pdst);
-      
+
       pdst.setName(psrc.getName());
       pdst.setValue(psrc.getValue());
-      
+
       copyParameters(pdst.getParameters(), psrc.getParameters());
     }
   }
 
-  private void executeRun(final Run run) throws GRuntimeException
+  private void executeRunSeries(Run run) throws GRuntimeException
+  {
+    currentSerieParameters.clear();
+    executeSerie(run, getAllRunSeriesParameters(run), 0, new ArrayList<String>());
+  }
+  
+  private void executeSerie(Run run, List<SeriesParameter> paramSublist, int paramIndex, List<String> path) throws GRuntimeException
+  {
+    if(paramIndex < paramSublist.size())
+    {
+      SeriesParameter param = paramSublist.get(paramIndex);
+      for(int i = 0; i < param.getValues().size(); i++)
+      {
+        List<String> newPath = new ArrayList<String>();
+        newPath.addAll(path);
+        newPath.add("" + (i + 1));
+        currentSerieParameters.put(param.getName(), param.getValues().get(i));
+        executeSerie(run, paramSublist, paramIndex + 1, newPath);
+      }
+    }
+    else
+    {
+      executeRun(run, path);
+    }
+  }
+  
+  private void executeRun(final Run run, List<String> seriesPath) throws GRuntimeException
   {
     if(modelRoot.getModel() == null)
     {
       // Show message
       return;
     }
-
-    File base = new File(modelRootFile.getProject().getLocation()
-        .toPortableString());
-
-    String resultsName = getExperimentName()
-        + "." + run.getName();
-
+    
+    String seriePath = ".";
+    final String runSeriesLabel = RuntimeUtils.stringJoin(seriesPath, "."); 
+    if(!seriesPath.isEmpty())
+    {
+      seriePath = "." + runSeriesLabel + ".";
+    }
+    
+    File base = new File(modelRootFile.getProject().getLocation().toPortableString());
+    String resultsName = getExperimentName() + seriePath + run.getName();
     Calendar startTime = Calendar.getInstance();
     startTime.setTimeZone(TimeZone.getTimeZone(run.getTimezone()));
     startTime.setTimeInMillis(Long.parseLong(run.getStartRealTime()));
-
     final ModelErrorLogger errors = new UIErrorLogger();
-    final FastLogger stats = new FastLogger(new File(base, resultsName
-        + ".gstats"), true);
+    final FastLogger stats = new FastLogger(new File(base, resultsName + ".gstats"), true);
     stats.setManifest(new LogManifest(modelRoot.getDescription(), startTime));
-
-    final FastGanttLogger gantt = new FastGanttLogger(startTime, new File(base,
-        resultsName + ".gantt"), true);
-
+    final FastGanttLogger gantt = new FastGanttLogger(startTime, new File(base, resultsName + ".gantt"), true);
     ModelProfileLogger profile = null;
+    
+    for(Entry<String, String> p: currentSerieParameters.entrySet())
+    {
+      stats.logParameter(p.getKey(), p.getValue());
+    }
+    
     if(modelRoot.getMode().equals(RunMode.DEBUG))
     {
       try
@@ -1795,47 +1805,43 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
     try
     {
-      final GridRuntimeModel model = new GridRuntimeModel(0, RuntimeUtils
-          .parseTimeText(run.getLength()), startTime, null, errors, profile, 0,
-          false);
+      final GridRuntimeModel model = new GridRuntimeModel(0, RuntimeUtils.parseTimeText(run.getLength()), startTime,
+          null, errors, profile, 0, false);
       model.addWorkingPath(base);
 
-      PlatformUI.getWorkbench().getProgressService().run(true, true,
-          new IRunnableWithProgress()
+      PlatformUI.getWorkbench().getProgressService().run(true, true, new IRunnableWithProgress()
+      {
+        public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+        {
+          ModelProgressMonitor progress = new UIProgressMonitor("Running experiment " + run.getName() + " (" + runSeriesLabel + ")", monitor);
+          model.setProgressMonitor(progress);
+
+          try
           {
-            public void run(final IProgressMonitor monitor)
-                throws InvocationTargetException, InterruptedException
+            model.setModel(makeModelRoot(stats, gantt, run, model));
+            model.runModel();
+
+            while(!model.finished() && !monitor.isCanceled())
             {
-              ModelProgressMonitor progress = new UIProgressMonitor(
-                  "Running experiment " + run.getName(), monitor);
-              model.setProgressMonitor(progress);
-
-              try
-              {
-                model.setModel(makeModelRoot(stats, gantt, run, model));
-                model.runModel();
-
-                while(!model.finished() && !monitor.isCanceled())
-                {
-                  Thread.sleep(500);
-                }
-
-                // Check that model has finished without errors. 
-                if(errors.getLastError() != null)
-                {
-                  throw new GRuntimeException(errors.getLastError());
-                }
-              }
-              catch(GRuntimeException e)
-              {
-                throw new InvocationTargetException(e);
-              }
-              finally
-              {
-                model.stopModel();
-              }
+              Thread.sleep(500);
             }
-          });
+
+            // Check that model has finished without errors.
+            if(errors.getLastError() != null)
+            {
+              throw new GRuntimeException(errors.getLastError());
+            }
+          }
+          catch(GRuntimeException e)
+          {
+            throw new InvocationTargetException(e);
+          }
+          finally
+          {
+            model.stopModel();
+          }
+        }
+      });
     }
     catch(InvocationTargetException e)
     {
@@ -1875,8 +1881,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
     for(Method method : allMethods)
     {
-      if(method.getName().equals(mname)
-          && method.getAnnotation(Parameter.class) != null
+      if(method.getName().equals(mname) && method.getAnnotation(Parameter.class) != null
           && method.getParameterTypes().length == 1)
       {
         return method;
@@ -1899,6 +1904,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
   /**
    * Check if run is selected and shows error message.
+   * 
    * @return
    */
   private boolean isRunSelected()
@@ -1913,6 +1919,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
   /**
    * Check if visualizer is selected and shows error message.
+   * 
    * @return
    */
   private boolean isVisualizerSelected()
@@ -1925,8 +1932,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     return true;
   }
 
-  private ActiveElement makeModelRoot(MetricsLogger stats, GanttLogger gantt,
-      Run run, RuntimeModel model) throws GRuntimeException
+  private ActiveElement makeModelRoot(MetricsLogger stats, GanttLogger gantt, Run run, RuntimeModel model)
+      throws GRuntimeException
   {
     ActiveElement root = new ActiveContainer("root", model);
     HashMap<String, com.googlecode.gridme.runtime.ModelElement> elems = new HashMap<String, com.googlecode.gridme.runtime.ModelElement>();
@@ -1949,8 +1956,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     {
       if(elem instanceof Link)
       {
-        GConnection from = (GConnection) elems.get(((Link) elem).getFrom()
-            .getName());
+        GConnection from = (GConnection) elems.get(((Link) elem).getFrom().getName());
         GElement to = (GElement) elems.get(((Link) elem).getTo().getName());
 
         from.connectElementSendReceive(to);
@@ -1965,8 +1971,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     saveRunParameters();
     if(isRunSelected())
     {
-      ExecutionScenarioWizard wizard = new ExecutionScenarioWizard(selectedRun,
-          runList.getSelectionCount() == 1);
+      ExecutionScenarioWizard wizard = new ExecutionScenarioWizard(selectedRun, runList.getSelectionCount() == 1);
       WizardDialog dialog = new WizardDialog(runList.getShell(), wizard);
 
       if(dialog.open() == Window.OK)
@@ -2056,36 +2061,31 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   }
 
   /**
-   * Recursively calls parameter setter methods for the element 
-   * instance. 
+   * Recursively calls parameter setter methods for the element instance.
    * 
    * @param elem
    * @param param
    */
-  private void setChildParameter(Object elem, RParameter param)
-      throws GRuntimeException
+  private void setChildParameter(Object elem, RParameter param) throws GRuntimeException
   {
     // Get argument type info
     Method setParam = getParamSetMethod(elem, param);
     if(setParam == null)
     {
-      throw new GRuntimeException("Unknown parameter: " + param.getName()
-          + " in " + elem.getClass().getName());
+      throw new GRuntimeException("Unknown parameter: " + param.getName() + " in " + elem.getClass().getName());
     }
 
-    Object argValue = param.getValue(); // String by default
+    Object argValue = getParameterValue(param.getValue());
     if(setParam.getAnnotation(Parameter.class).hasParams())
     {
       try
       {
-        //argValue = Class.forName(param.getValue()).newInstance();
-        argValue = ImplScanner.getInstance().getClassLoader().loadClass(
-            param.getValue()).newInstance();
+        // argValue = Class.forName(param.getValue()).newInstance();
+        argValue = ImplScanner.getInstance().getClassLoader().loadClass((String) argValue).newInstance();
       }
       catch(Exception e)
       {
-        throw new GRuntimeException("Unable to load implementation class: "
-            + param.getValue());
+        throw new GRuntimeException("Unable to load implementation class: " + argValue);
       }
       // Set child parameters for the object
       for(RParameter cpar : param.getParameters())
@@ -2100,24 +2100,77 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     }
     catch(Exception e)
     {
-      throw new GRuntimeException("Error occured while setting parameter: "
-          + param.getName() + ", value=" + argValue);
+      throw new GRuntimeException("Error occured while setting parameter: " + param.getName() + ", value=" + argValue);
     }
 
-    //    System.out.println("" + elem + "." + setParam.getName() + "( " + argValue
-    //        + " )");
+    // System.out.println("" + elem + "." + setParam.getName() + "( " + argValue
+    // + " )");
   }
 
   /**
+   * Parses parameter value which can be either plain string or ${series parameter} 
+   */
+  private String getParameterValue(String value)
+  {
+    Pattern p = Pattern.compile("\\$\\{(.+)\\}");
+    Matcher matcher = p.matcher(value);
+    if(matcher.matches())
+    {
+      String seriesParamName = matcher.group(1);
+      String paramValue = currentSerieParameters.get(seriesParamName);
+      return paramValue;
+    }
+    else
+    {
+      return value;
+    }
+  }
+
+  /**
+   * Returns a list of run series parameters used by this run scenario. 
+   */
+  private List<SeriesParameter> getAllRunSeriesParameters(Run run)
+  {
+    ArrayList<SeriesParameter> result = new ArrayList<SeriesParameter>();
+    Pattern p = Pattern.compile("\\$\\{(.+)\\}");
+    
+    for(TreeIterator<EObject> ait = run.eAllContents(); ait.hasNext();)
+    {
+      EObject obj = ait.next();
+      if(obj instanceof gmodel.Parameter)
+      {
+        Matcher matcher = p.matcher(((gmodel.Parameter) obj).getValue());
+        if(matcher.matches())
+        {
+          String pSeriesName = matcher.group(1);
+          for(SeriesParameter ps: modelRoot.getSeries())
+          {
+            if(ps.getName().equals(pSeriesName))
+            {
+              result.add(ps);
+              break;
+            }
+          }
+        }
+      }
+    }
+    
+    return result;
+  }
+  
+  
+  /**
    * Initializes parameters for the given model element instance.
    * 
-   * @param melem Runtime model element instance
-   * @param elem EMF model element instance
-   * @param run Current run scenario EMF instance
+   * @param melem
+   *          Runtime model element instance
+   * @param elem
+   *          EMF model element instance
+   * @param run
+   *          Current run scenario EMF instance
    */
-  private void setElementParameters(
-      com.googlecode.gridme.runtime.ModelElement melem, ModelElement elem,
-      Run run) throws GRuntimeException
+  private void setElementParameters(com.googlecode.gridme.runtime.ModelElement melem, ModelElement elem, Run run)
+      throws GRuntimeException
   {
     HashMap<String, RParameter> mparams = new HashMap<String, RParameter>();
 
@@ -2167,14 +2220,16 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   }
 
   /**
-   * Recursively checks that all required parameters are 
-   * present in the collection.
+   * Recursively checks that all required parameters are present in the
+   * collection.
    * 
-   * @param impl object instance
-   * @param values collection of parameters to set
+   * @param impl
+   *          object instance
+   * @param values
+   *          collection of parameters to set
    */
-  private void checkRequiredParameters(Object impl, String hrname,
-      Collection<RParameter> values) throws GRuntimeException
+  private void checkRequiredParameters(Object impl, String hrname, Collection<RParameter> values)
+      throws GRuntimeException
   {
     HashMap<String, RParameter> pset = new HashMap<String, RParameter>();
     for(RParameter par : values)
@@ -2191,15 +2246,13 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       if(psetMethod != null)
       {
         // Name of the implementation parameter
-        String implParName = RuntimeUtils.getParameterName(allMethods[i]
-            .getName());
+        String implParName = RuntimeUtils.getParameterName(allMethods[i].getName());
         // Parameter initialization value that we have
         RParameter parExisting = pset.get(implParName);
 
         if(psetMethod.required() && parExisting == null)
         {
-          throw new GRuntimeException("Required parameter " + implParName
-              + " is not set for the " + hrname + " - "
+          throw new GRuntimeException("Required parameter " + implParName + " is not set for the " + hrname + " - "
               + impl.getClass().getSimpleName());
         }
 
@@ -2207,19 +2260,16 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         if(psetMethod.hasParams() && parExisting != null)
         {
           Object child;
+          String parValue = getParameterValue(parExisting.getValue());
           try
           {
-            //child = Class.forName(parExisting.getValue()).newInstance();
-            child = ImplScanner.getInstance().getClassLoader().loadClass(
-                parExisting.getValue()).newInstance();
+            child = ImplScanner.getInstance().getClassLoader().loadClass(parValue).newInstance();
           }
           catch(Exception e)
           {
-            throw new GRuntimeException("Unable to load implementation class: "
-                + parExisting.getValue(), e);
+            throw new GRuntimeException("Unable to load implementation class: " + parValue, e);
           }
-          checkRequiredParameters(child, implParName, parExisting
-              .getParameters());
+          checkRequiredParameters(child, implParName, parExisting.getParameters());
         }
       }
     }
@@ -2232,8 +2282,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     // Load model instance
     try
     {
-      modelRoot.setModel((Model) PlatformUtils.loadModelFromFile(new Path(
-          gmodel.getText())));
+      modelRoot.setModel((Model) PlatformUtils.loadModelFromFile(new Path(gmodel.getText())));
     }
     catch(Exception e)
     {
@@ -2270,8 +2319,180 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   protected void createPages()
   {
     createPropertiesPage();
+    createSeriesPage();
     createScenariosPage();
     createVisualizersPage();
+  }
+
+  private void createSeriesPage()
+  {
+    final Composite page = new Composite(getContainer(), SWT.NONE);
+    page.setLayout(new GridLayout(4, false));
+    GridData dta = null;
+
+    seriesParamList = new Table(page, SWT.BORDER | SWT.MULTI);
+    seriesParamList.setLinesVisible(true);
+    seriesParamList.setHeaderVisible(true);
+
+    TableColumn nameCol = new TableColumn(seriesParamList, SWT.NONE);
+    nameCol.setWidth(200);
+    nameCol.setText("Name");
+
+    TableColumn valueCol = new TableColumn(seriesParamList, SWT.NONE);
+    valueCol.setWidth(200);
+    valueCol.setText("Value");
+
+    final TableEditor editor = new TableEditor(seriesParamList);
+    editor.horizontalAlignment = SWT.LEFT;
+    editor.grabHorizontal = true;
+    seriesParamList.addListener(SWT.MouseDown, new Listener()
+    {
+      private void setItemText(TableItem item, int column, String txt)
+      {
+        item.setText(column, txt);
+        SeriesParameter param = (SeriesParameter) item.getData();
+        
+        if(column == 0)
+        {
+          param.setName(txt);
+        }
+        else
+        {
+          param.getValues().clear();
+          for(String s : txt.split(","))
+          {
+            param.getValues().add(s);
+          }
+        }
+        pageModified();
+      }
+
+      public void handleEvent(Event event)
+      {
+        Rectangle clientArea = seriesParamList.getClientArea();
+        Point pt = new Point(event.x, event.y);
+        int index = seriesParamList.getTopIndex();
+        while(index < seriesParamList.getItemCount())
+        {
+          boolean visible = false;
+          final TableItem item = seriesParamList.getItem(index);
+          for(int i = 0; i < seriesParamList.getColumnCount(); i++)
+          {
+            Rectangle rect = item.getBounds(i);
+            if(rect.contains(pt))
+            {
+              final int column = i;
+              final Text text = new Text(seriesParamList, SWT.NONE);
+              Listener textListener = new Listener()
+              {
+                public void handleEvent(final Event e)
+                {
+                  switch(e.type)
+                  {
+                    case SWT.FocusOut:
+                      // item.setText(column, text.getText());
+                      setItemText(item, column, text.getText());
+                      text.dispose();
+                      break;
+                    case SWT.Traverse:
+                      switch(e.detail)
+                      {
+                        case SWT.TRAVERSE_RETURN:
+                          // item.setText(column, text.getText());
+                          setItemText(item, column, text.getText());
+                          // FALL THROUGH
+                        case SWT.TRAVERSE_ESCAPE:
+                          text.dispose();
+                          e.doit = false;
+                      }
+                      break;
+                  }
+                }
+              };
+              text.addListener(SWT.FocusOut, textListener);
+              text.addListener(SWT.Traverse, textListener);
+              editor.setEditor(text, item, i);
+              text.setText(item.getText(i));
+              text.selectAll();
+              text.setFocus();
+              return;
+            }
+            if(!visible && rect.intersects(clientArea))
+            {
+              visible = true;
+            }
+          }
+          if(!visible)
+            return;
+          index++;
+        }
+      }
+    });
+
+    dta = new GridData(SWT.FILL, SWT.FILL, true, true);
+    dta.horizontalSpan = 4;
+    seriesParamList.setLayoutData(dta);
+
+    // Controls
+
+    Button addButton = new Button(page, SWT.NONE);
+    addButton.setText("Add");
+
+    addButton.addSelectionListener(new SelectionAdapter()
+    {
+      public void widgetSelected(SelectionEvent event)
+      {
+        addSeriesParameter();
+      }
+    });
+
+    Button delButton = new Button(page, SWT.NONE);
+    delButton.setText("Delete");
+
+    delButton.addSelectionListener(new SelectionAdapter()
+    {
+      public void widgetSelected(SelectionEvent event)
+      {
+        if(seriesParamList.getSelectionCount() > 0)
+        {
+          for(TableItem item : seriesParamList.getSelection())
+          {
+            seriesParamList.remove(seriesParamList.indexOf(item));
+          }
+        }
+        pageModified();
+      }
+    });
+
+    buildSerieList();
+
+    page.pack();
+    int index = addPage(page);
+    setPageText(index, "Run series");
+  }
+
+  private void buildSerieList()
+  {
+    for(SeriesParameter param : modelRoot.getSeries())
+    {
+      addSeriesTableItem(param);
+    }
+  }
+
+  private void addSeriesParameter()
+  {
+    SeriesParameter sparam = GexperimentFactoryImpl.eINSTANCE.createSeriesParameter();
+    sparam.setName("New parameter");
+    sparam.getValues().add("New value");
+    addSeriesTableItem(sparam);
+    pageModified();
+  }
+
+  private void addSeriesTableItem(SeriesParameter sparam)
+  {
+    TableItem item = new TableItem(seriesParamList, SWT.NONE);
+    item.setData(sparam);
+    item.setText(new String[] { sparam.getName(), RuntimeUtils.stringJoin(sparam.getValues(), ",") });
   }
 
   private void createVisualizersPage()
@@ -2350,8 +2571,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       public void widgetSelected(SelectionEvent event)
       {
         if(isVisualizerSelected()
-            && PlatformUtils.askYesNo("Confirm delete", "Delete "
-                + visualizersList.getSelectionCount() + " visualizers?"))
+            && PlatformUtils.askYesNo("Confirm delete", "Delete " + visualizersList.getSelectionCount()
+                + " visualizers?"))
         {
           for(TableItem item : visualizersList.getSelection())
           {
@@ -2374,7 +2595,6 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       }
     });
 
-    
     Button cloneButton = new Button(page, SWT.NONE);
     cloneButton.setText("Clone");
 
@@ -2385,7 +2605,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         cloneVisual();
       }
     });
-    
+
     Button execButton = new Button(page, SWT.NONE);
     execButton.setText("Execute");
 
@@ -2409,8 +2629,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
           // Show results
           if(eCount == 1)
           {
-            Preferences prefs = GridmeUIPlugin.getInstance()
-                .getPluginPreferences();
+            Preferences prefs = GridmeUIPlugin.getInstance().getPluginPreferences();
             if(prefs.getBoolean(GridmePreferencePage.SHOW_VISUAL))
             {
               IEditorInput editorInput = new FileEditorInput(vres);
@@ -2421,9 +2640,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         }
         catch(GRuntimeException e)
         {
-          //GridmeUIPlugin.logException(e);
-          PlatformUtils.showErrorMessage("Execution of visualizer failed", e
-              .getUserMessageString());
+          // GridmeUIPlugin.logException(e);
+          PlatformUtils.showErrorMessage("Execution of visualizer failed", e.getUserMessageString());
         }
       }
     });
@@ -2474,6 +2692,10 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     scenarioName.setWidth(200);
     scenarioName.setText("Run scenario results");
 
+    TableColumn scenarioParams = new TableColumn(visualizerInputList, SWT.NONE);
+    scenarioParams.setWidth(800);
+    scenarioParams.setText("Parameters");
+    
     MenuManager popupMenu = new MenuManager();
     popupMenu.setRemoveAllWhenShown(true);
     popupMenu.addMenuListener(new IMenuListener()
@@ -2491,8 +2713,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         }
       }
     });
-    visualizerInputList.setMenu(popupMenu
-        .createContextMenu(visualizerInputList));
+    visualizerInputList.setMenu(popupMenu.createContextMenu(visualizerInputList));
 
     visualizerElementsList = new Table(tpan, SWT.BORDER | SWT.MULTI);
     visualizerElementsList.setLinesVisible(true);
@@ -2522,8 +2743,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         }
       }
     });
-    visualizerElementsList.setMenu(popupMenu
-        .createContextMenu(visualizerElementsList));
+    visualizerElementsList.setMenu(popupMenu.createContextMenu(visualizerElementsList));
 
     page.pack();
     int index = addPage(page);
@@ -2538,8 +2758,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       copyVisual(visual, selectedVisualizer);
 
       VisualizerWizard wizard = new VisualizerWizard(visual, true);
-      WizardDialog dialog = new WizardDialog(visualizerElementsList.getShell(),
-          wizard);
+      WizardDialog dialog = new WizardDialog(visualizerElementsList.getShell(), wizard);
 
       if(dialog.open() == Window.OK)
       {
@@ -2556,7 +2775,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     target.setImplementation(source.getImplementation());
     target.setStartTime(source.getStartTime());
     target.setStopTime(source.getStopTime());
-    
+
     for(gmodel.Parameter par : source.getParameters())
     {
       gmodel.Parameter newPar = GmodelFactoryImpl.eINSTANCE.createParameter();
@@ -2564,7 +2783,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       newPar.setName(par.getName());
       newPar.setValue(par.getValue());
     }
-    
+
     for(Chart chart : source.getCharts())
     {
       Chart newChart = GexperimentFactoryImpl.eINSTANCE.createChart();
@@ -2572,7 +2791,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       newChart.setElement(chart.getElement());
       newChart.setMetric(chart.getMetric());
     }
-    
+
     for(RunResult input : source.getInput())
     {
       RunResult newInput = GexperimentFactoryImpl.eINSTANCE.createRunResult();
@@ -2585,10 +2804,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   {
     if(isVisualizerSelected())
     {
-      VisualizerWizard wizard = new VisualizerWizard(selectedVisualizer,
-          visualizersList.getSelectionCount() == 1);
-      WizardDialog dialog = new WizardDialog(visualizerElementsList.getShell(),
-          wizard);
+      VisualizerWizard wizard = new VisualizerWizard(selectedVisualizer, visualizersList.getSelectionCount() == 1);
+      WizardDialog dialog = new WizardDialog(visualizerElementsList.getShell(), wizard);
 
       if(dialog.open() == Window.OK)
       {
@@ -2612,37 +2829,27 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     }
   }
 
-  private IFile executeVisualizer(final Visualizer visual)
-      throws GRuntimeException
+  private IFile executeVisualizer(final Visualizer visual) throws GRuntimeException
   {
-    File base = new File(modelRootFile.getProject().getLocation()
-        .toPortableString());
-
-    String vname = getExperimentName() + "."
-        + visual.getName();
-
+    File base = new File(modelRootFile.getProject().getLocation().toPortableString());
+    String vname = getExperimentName() + "." + visual.getName();
     final String vresultsPath = new File(base, vname).getAbsolutePath();
-
     IFile rf = modelRootFile.getProject().getFile(vname);
-
     final com.googlecode.gridme.runtime.visual.Visualizer runtimeVisual;
     Class[] argsClass = new Class[] { String.class };
     Object[] args = new Object[] { visual.getName() };
     try
     {
-      //      Constructor cons = Class.forName(visual.getImplementation())
-      //          .getConstructor(argsClass);
-      Constructor cons = ImplScanner.getInstance().getClassLoader().loadClass(
-          visual.getImplementation()).getConstructor(argsClass);
+      // Constructor cons = Class.forName(visual.getImplementation())
+      // .getConstructor(argsClass);
+      Constructor cons = ImplScanner.getInstance().getClassLoader().loadClass(visual.getImplementation())
+          .getConstructor(argsClass);
 
-      runtimeVisual = (com.googlecode.gridme.runtime.visual.Visualizer) cons
-          .newInstance(args);
+      runtimeVisual = (com.googlecode.gridme.runtime.visual.Visualizer) cons.newInstance(args);
     }
     catch(Exception e)
     {
-      throw new GRuntimeException(
-          "Unable to load visualizer implementation class: "
-              + visual.getImplementation());
+      throw new GRuntimeException("Unable to load visualizer implementation class: " + visual.getImplementation());
     }
 
     for(gmodel.Parameter par : visual.getParameters())
@@ -2650,8 +2857,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       Method setParam = getParamSetMethod(runtimeVisual, par);
       if(setParam == null)
       {
-        throw new GRuntimeException("Unknown parameter: " + par.getName()
-            + " in " + visual.getImplementation());
+        throw new GRuntimeException("Unknown parameter: " + par.getName() + " in " + visual.getImplementation());
       }
       try
       {
@@ -2659,8 +2865,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       }
       catch(Exception e)
       {
-        throw new GRuntimeException("Error occured while setting parameter: "
-            + par.getName() + ", value=" + par.getValue());
+        throw new GRuntimeException("Error occured while setting parameter: " + par.getName() + ", value="
+            + par.getValue());
       }
     }
 
@@ -2673,35 +2879,29 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     final ArrayList<LogEntry> logList = new ArrayList<LogEntry>();
     for(RunResult res : visual.getInput())
     {
-      logList.add(new LogEntry(res.getName(), new FileBasedLogAnalyser(
-          new File(base, res.getName()))));
+      logList.add(new LogEntry(res.getName(), new FileBasedLogAnalyser(new File(base, res.getName()))));
     }
 
     try
     {
-      PlatformUI.getWorkbench().getProgressService().run(true, true,
-          new IRunnableWithProgress()
-          {
-            public void run(final IProgressMonitor monitor)
-                throws InvocationTargetException, InterruptedException
-            {
-              ModelProgressMonitor progress = new UIProgressMonitor(
-                  "Running visualizer " + visual.getName(), monitor);
-              long start = RuntimeUtils.parseTimeText(visual.getStartTime());
-              long stop = RuntimeUtils.parseTimeText(visual.getStopTime());
+      PlatformUI.getWorkbench().getProgressService().run(true, true, new IRunnableWithProgress()
+      {
+        public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+        {
+          ModelProgressMonitor progress = new UIProgressMonitor("Running visualizer " + visual.getName(), monitor);
+          long start = RuntimeUtils.parseTimeText(visual.getStartTime());
+          long stop = RuntimeUtils.parseTimeText(visual.getStopTime());
 
-              try
-              {
-                runtimeVisual.execute(vresultsPath, start, stop, charts,
-                    logList, progress);
-              }
-              catch(Exception e)
-              {
-                throw new InvocationTargetException(e,
-                    "Visualizer execution failed: " + e.getMessage());
-              }
-            }
-          });
+          try
+          {
+            runtimeVisual.execute(vresultsPath, start, stop, charts, logList, progress);
+          }
+          catch(Exception e)
+          {
+            throw new InvocationTargetException(e, "Visualizer execution failed: " + e.getMessage());
+          }
+        }
+      });
     }
     catch(InvocationTargetException e)
     {
@@ -2709,8 +2909,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
     }
     catch(InterruptedException e)
     {
-      throw new GRuntimeException("Visualizer execution failed: "
-          + e.getMessage());
+      throw new GRuntimeException("Visualizer execution failed: " + e.getMessage());
     }
 
     return rf;
@@ -2786,8 +2985,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   private void createNewVisualizer()
   {
     VisualizerWizard wizard = new VisualizerWizard();
-    WizardDialog dialog = new WizardDialog(visualizerElementsList.getShell(),
-        wizard);
+    WizardDialog dialog = new WizardDialog(visualizerElementsList.getShell(), wizard);
 
     if(dialog.open() == Window.OK)
     {
@@ -2828,8 +3026,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
   private void setTableItemVisual(TableItem item, Visualizer visual)
   {
-    item.setText(new String[] { visual.getName(), visual.getStartTime(),
-        visual.getStopTime(), visual.getImplementation() });
+    item.setText(new String[] { visual.getName(), visual.getStartTime(), visual.getStopTime(),
+        visual.getImplementation() });
   }
 
   @Override
@@ -2847,6 +3045,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
         modelRoot.setMode(RunMode.RELEASE);
       }
 
+      saveRunSeries();
       saveExperimentParameters();
       saveRunParameters();
       saveVisualizerChartsAndInput();
@@ -2861,6 +3060,15 @@ public class ExperimentEditor extends MultiPageEditorPart implements
       }
       isPageModified = false;
       firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
+  }
+
+  private void saveRunSeries()
+  {
+    modelRoot.getSeries().clear();
+    for(TableItem item : seriesParamList.getItems())
+    {
+      modelRoot.getSeries().add((SeriesParameter) item.getData());
     }
   }
 
@@ -2888,8 +3096,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
   }
 
   @Override
-  public void init(IEditorSite site, IEditorInput input)
-      throws PartInitException
+  public void init(IEditorSite site, IEditorInput input) throws PartInitException
   {
     setSite(site);
     setInput(input);
@@ -2899,8 +3106,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements
 
     try
     {
-      modelRoot = (Experiment) PlatformUtils.loadModelFromFile(modelRootFile
-          .getFullPath());
+      modelRoot = (Experiment) PlatformUtils.loadModelFromFile(modelRootFile.getFullPath());
     }
     catch(Exception e)
     {

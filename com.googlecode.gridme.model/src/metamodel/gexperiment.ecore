@@ -14,6 +14,8 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="visualizers" upperBound="-1"
         eType="#//Visualizer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="series" upperBound="-1"
+        eType="#//SeriesParameter" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RunMode">
     <eLiterals name="RELEASE"/>
@@ -56,5 +58,10 @@
         upperBound="-1" eType="ecore:EClass gmodel.ecore#//ModelElement"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" lowerBound="1"
         upperBound="-1" eType="ecore:EClass gmodel.ecore#//RParameter" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SeriesParameter" eSuperTypes="gmodel.ecore#//Named">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="values" lowerBound="1"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
   </eClassifiers>
 </ecore:EPackage>

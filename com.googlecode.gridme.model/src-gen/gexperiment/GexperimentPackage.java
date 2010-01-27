@@ -149,13 +149,22 @@ public interface GexperimentPackage extends EPackage
   int EXPERIMENT__VISUALIZERS = 5;
 
   /**
+   * The feature id for the '<em><b>Series</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EXPERIMENT__SERIES = 6;
+
+  /**
    * The number of structural features of the '<em>Experiment</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EXPERIMENT_FEATURE_COUNT = 6;
+  int EXPERIMENT_FEATURE_COUNT = 7;
 
   /**
    * The meta object id for the '{@link gexperiment.impl.RunImpl <em>Run</em>}' class.
@@ -415,6 +424,43 @@ public interface GexperimentPackage extends EPackage
   int PARAMETER_VALUE_FEATURE_COUNT = 2;
 
   /**
+   * The meta object id for the '{@link gexperiment.impl.SeriesParameterImpl <em>Series Parameter</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see gexperiment.impl.SeriesParameterImpl
+   * @see gexperiment.impl.GexperimentPackageImpl#getSeriesParameter()
+   * @generated
+   */
+  int SERIES_PARAMETER = 6;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SERIES_PARAMETER__NAME = GmodelPackage.NAMED__NAME;
+
+  /**
+   * The feature id for the '<em><b>Values</b></em>' attribute list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SERIES_PARAMETER__VALUES = GmodelPackage.NAMED_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Series Parameter</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SERIES_PARAMETER_FEATURE_COUNT = GmodelPackage.NAMED_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link gexperiment.RunMode <em>Run Mode</em>}' enum.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -422,7 +468,7 @@ public interface GexperimentPackage extends EPackage
    * @see gexperiment.impl.GexperimentPackageImpl#getRunMode()
    * @generated
    */
-  int RUN_MODE = 6;
+  int RUN_MODE = 7;
 
 
   /**
@@ -500,6 +546,17 @@ public interface GexperimentPackage extends EPackage
    * @generated
    */
   EReference getExperiment_Visualizers();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link gexperiment.Experiment#getSeries <em>Series</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Series</em>'.
+   * @see gexperiment.Experiment#getSeries()
+   * @see #getExperiment()
+   * @generated
+   */
+  EReference getExperiment_Series();
 
   /**
    * Returns the meta object for class '{@link gexperiment.Run <em>Run</em>}'.
@@ -717,6 +774,27 @@ public interface GexperimentPackage extends EPackage
   EReference getParameterValue_Parameters();
 
   /**
+   * Returns the meta object for class '{@link gexperiment.SeriesParameter <em>Series Parameter</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Series Parameter</em>'.
+   * @see gexperiment.SeriesParameter
+   * @generated
+   */
+  EClass getSeriesParameter();
+
+  /**
+   * Returns the meta object for the attribute list '{@link gexperiment.SeriesParameter#getValues <em>Values</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute list '<em>Values</em>'.
+   * @see gexperiment.SeriesParameter#getValues()
+   * @see #getSeriesParameter()
+   * @generated
+   */
+  EAttribute getSeriesParameter_Values();
+
+  /**
    * Returns the meta object for enum '{@link gexperiment.RunMode <em>Run Mode</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -806,6 +884,14 @@ public interface GexperimentPackage extends EPackage
      * @generated
      */
     EReference EXPERIMENT__VISUALIZERS = eINSTANCE.getExperiment_Visualizers();
+
+    /**
+     * The meta object literal for the '<em><b>Series</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference EXPERIMENT__SERIES = eINSTANCE.getExperiment_Series();
 
     /**
      * The meta object literal for the '{@link gexperiment.impl.RunImpl <em>Run</em>}' class.
@@ -976,6 +1062,24 @@ public interface GexperimentPackage extends EPackage
      * @generated
      */
     EReference PARAMETER_VALUE__PARAMETERS = eINSTANCE.getParameterValue_Parameters();
+
+    /**
+     * The meta object literal for the '{@link gexperiment.impl.SeriesParameterImpl <em>Series Parameter</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see gexperiment.impl.SeriesParameterImpl
+     * @see gexperiment.impl.GexperimentPackageImpl#getSeriesParameter()
+     * @generated
+     */
+    EClass SERIES_PARAMETER = eINSTANCE.getSeriesParameter();
+
+    /**
+     * The meta object literal for the '<em><b>Values</b></em>' attribute list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute SERIES_PARAMETER__VALUES = eINSTANCE.getSeriesParameter_Values();
 
     /**
      * The meta object literal for the '{@link gexperiment.RunMode <em>Run Mode</em>}' enum.

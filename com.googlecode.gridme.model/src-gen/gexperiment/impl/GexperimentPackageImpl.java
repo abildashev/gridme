@@ -35,6 +35,7 @@ import gexperiment.ParameterValue;
 import gexperiment.Run;
 import gexperiment.RunMode;
 import gexperiment.RunResult;
+import gexperiment.SeriesParameter;
 import gexperiment.Visualizer;
 
 import gmodel.GmodelPackage;
@@ -104,6 +105,13 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass seriesParameterEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EEnum runModeEEnum = null;
 
   /**
@@ -134,20 +142,10 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
   private static boolean isInited = false;
 
   /**
-   * Creates, registers, and initializes the <b>Package</b> for this
-   * model, and for any others upon which it depends.  Simple
-   * dependencies are satisfied by calling this method on all
-   * dependent packages before doing anything else.  This method drives
-   * initialization for interdependent packages directly, in parallel
-   * with this package, itself.
-   * <p>Of this package and its interdependencies, all packages which
-   * have not yet been registered by their URI values are first created
-   * and registered.  The packages are then initialized in two steps:
-   * meta-model objects for all of the packages are created before any
-   * are initialized, since one package's meta-model objects may refer to
-   * those of another.
-   * <p>Invocation of this method will not affect any packages that have
-   * already been initialized.
+   * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+   * 
+   * <p>This method is used to initialize {@link GexperimentPackage#eINSTANCE} when that field is accessed.
+   * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #eNS_URI
@@ -160,7 +158,7 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     if (isInited) return (GexperimentPackage)EPackage.Registry.INSTANCE.getEPackage(GexperimentPackage.eNS_URI);
 
     // Obtain or create and register package
-    GexperimentPackageImpl theGexperimentPackage = (GexperimentPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(eNS_URI) instanceof GexperimentPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(eNS_URI) : new GexperimentPackageImpl());
+    GexperimentPackageImpl theGexperimentPackage = (GexperimentPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof GexperimentPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new GexperimentPackageImpl());
 
     isInited = true;
 
@@ -178,6 +176,9 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     // Mark meta-data to indicate it can't be changed
     theGexperimentPackage.freeze();
 
+  
+    // Update the registry and return the package
+    EPackage.Registry.INSTANCE.put(GexperimentPackage.eNS_URI, theGexperimentPackage);
     return theGexperimentPackage;
   }
 
@@ -249,6 +250,16 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
   public EReference getExperiment_Visualizers()
   {
     return (EReference)experimentEClass.getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getExperiment_Series()
+  {
+    return (EReference)experimentEClass.getEStructuralFeatures().get(6);
   }
 
   /**
@@ -456,6 +467,26 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getSeriesParameter()
+  {
+    return seriesParameterEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getSeriesParameter_Values()
+  {
+    return (EAttribute)seriesParameterEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EEnum getRunMode()
   {
     return runModeEEnum;
@@ -498,6 +529,7 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     createEReference(experimentEClass, EXPERIMENT__PARAMETER_VALUES);
     createEReference(experimentEClass, EXPERIMENT__RUNS);
     createEReference(experimentEClass, EXPERIMENT__VISUALIZERS);
+    createEReference(experimentEClass, EXPERIMENT__SERIES);
 
     runEClass = createEClass(RUN);
     createEAttribute(runEClass, RUN__TIMEZONE);
@@ -523,6 +555,9 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     parameterValueEClass = createEClass(PARAMETER_VALUE);
     createEReference(parameterValueEClass, PARAMETER_VALUE__ELEMENTS);
     createEReference(parameterValueEClass, PARAMETER_VALUE__PARAMETERS);
+
+    seriesParameterEClass = createEClass(SERIES_PARAMETER);
+    createEAttribute(seriesParameterEClass, SERIES_PARAMETER__VALUES);
 
     // Create enums
     runModeEEnum = createEEnum(RUN_MODE);
@@ -563,6 +598,7 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     runEClass.getESuperTypes().add(theGmodelPackage.getNamed());
     visualizerEClass.getESuperTypes().add(theGmodelPackage.getNamed());
     runResultEClass.getESuperTypes().add(theGmodelPackage.getNamed());
+    seriesParameterEClass.getESuperTypes().add(theGmodelPackage.getNamed());
 
     // Initialize classes and features; add operations and parameters
     initEClass(experimentEClass, Experiment.class, "Experiment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -572,6 +608,7 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     initEReference(getExperiment_ParameterValues(), this.getParameterValue(), null, "parameterValues", null, 0, -1, Experiment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getExperiment_Runs(), this.getRun(), null, "runs", null, 0, -1, Experiment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getExperiment_Visualizers(), this.getVisualizer(), null, "visualizers", null, 0, -1, Experiment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getExperiment_Series(), this.getSeriesParameter(), null, "series", null, 0, -1, Experiment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(runEClass, Run.class, "Run", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRun_Timezone(), ecorePackage.getEString(), "timezone", null, 1, 1, Run.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -597,6 +634,9 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     initEClass(parameterValueEClass, ParameterValue.class, "ParameterValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getParameterValue_Elements(), theGmodelPackage.getModelElement(), null, "elements", null, 1, -1, ParameterValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getParameterValue_Parameters(), theGmodelPackage.getRParameter(), null, "parameters", null, 1, -1, ParameterValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(seriesParameterEClass, SeriesParameter.class, "SeriesParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getSeriesParameter_Values(), ecorePackage.getEString(), "values", "", 1, -1, SeriesParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Initialize enums and add enum literals
     initEEnum(runModeEEnum, RunMode.class, "RunMode");

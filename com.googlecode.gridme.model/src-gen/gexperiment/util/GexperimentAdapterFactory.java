@@ -132,6 +132,11 @@ public class GexperimentAdapterFactory extends AdapterFactoryImpl
         return createParameterValueAdapter();
       }
       @Override
+      public Adapter caseSeriesParameter(SeriesParameter object)
+      {
+        return createSeriesParameterAdapter();
+      }
+      @Override
       public Adapter caseNamed(Named object)
       {
         return createNamedAdapter();
@@ -244,6 +249,21 @@ public class GexperimentAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createParameterValueAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link gexperiment.SeriesParameter <em>Series Parameter</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see gexperiment.SeriesParameter
+   * @generated
+   */
+  public Adapter createSeriesParameterAdapter()
   {
     return null;
   }

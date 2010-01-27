@@ -1018,7 +1018,7 @@ public class ParameterTreeTable implements IMenuListener
   public void buildParamsProposals(NamedNodeWithParams elem, String className)
   {
     elem.clearProposals();
-    if(className != null && !className.isEmpty())
+    if(className != null && !className.isEmpty() && !className.startsWith("${"))
     {
       try
       {

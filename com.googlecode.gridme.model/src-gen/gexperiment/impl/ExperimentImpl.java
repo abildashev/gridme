@@ -32,6 +32,7 @@ import gexperiment.GexperimentPackage;
 import gexperiment.ParameterValue;
 import gexperiment.Run;
 import gexperiment.RunMode;
+import gexperiment.SeriesParameter;
 import gexperiment.Visualizer;
 
 import gmodel.Model;
@@ -65,6 +66,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link gexperiment.impl.ExperimentImpl#getParameterValues <em>Parameter Values</em>}</li>
  *   <li>{@link gexperiment.impl.ExperimentImpl#getRuns <em>Runs</em>}</li>
  *   <li>{@link gexperiment.impl.ExperimentImpl#getVisualizers <em>Visualizers</em>}</li>
+ *   <li>{@link gexperiment.impl.ExperimentImpl#getSeries <em>Series</em>}</li>
  * </ul>
  * </p>
  *
@@ -151,6 +153,16 @@ public class ExperimentImpl extends EObjectImpl implements Experiment
    * @ordered
    */
   protected EList<Visualizer> visualizers;
+
+  /**
+   * The cached value of the '{@link #getSeries() <em>Series</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSeries()
+   * @generated
+   * @ordered
+   */
+  protected EList<SeriesParameter> series;
 
   /**
    * <!-- begin-user-doc -->
@@ -309,6 +321,20 @@ public class ExperimentImpl extends EObjectImpl implements Experiment
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<SeriesParameter> getSeries()
+  {
+    if (series == null)
+    {
+      series = new EObjectContainmentEList<SeriesParameter>(SeriesParameter.class, this, GexperimentPackage.EXPERIMENT__SERIES);
+    }
+    return series;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -320,6 +346,8 @@ public class ExperimentImpl extends EObjectImpl implements Experiment
         return ((InternalEList<?>)getRuns()).basicRemove(otherEnd, msgs);
       case GexperimentPackage.EXPERIMENT__VISUALIZERS:
         return ((InternalEList<?>)getVisualizers()).basicRemove(otherEnd, msgs);
+      case GexperimentPackage.EXPERIMENT__SERIES:
+        return ((InternalEList<?>)getSeries()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -347,6 +375,8 @@ public class ExperimentImpl extends EObjectImpl implements Experiment
         return getRuns();
       case GexperimentPackage.EXPERIMENT__VISUALIZERS:
         return getVisualizers();
+      case GexperimentPackage.EXPERIMENT__SERIES:
+        return getSeries();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -383,6 +413,10 @@ public class ExperimentImpl extends EObjectImpl implements Experiment
         getVisualizers().clear();
         getVisualizers().addAll((Collection<? extends Visualizer>)newValue);
         return;
+      case GexperimentPackage.EXPERIMENT__SERIES:
+        getSeries().clear();
+        getSeries().addAll((Collection<? extends SeriesParameter>)newValue);
+        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -415,6 +449,9 @@ public class ExperimentImpl extends EObjectImpl implements Experiment
       case GexperimentPackage.EXPERIMENT__VISUALIZERS:
         getVisualizers().clear();
         return;
+      case GexperimentPackage.EXPERIMENT__SERIES:
+        getSeries().clear();
+        return;
     }
     super.eUnset(featureID);
   }
@@ -441,6 +478,8 @@ public class ExperimentImpl extends EObjectImpl implements Experiment
         return runs != null && !runs.isEmpty();
       case GexperimentPackage.EXPERIMENT__VISUALIZERS:
         return visualizers != null && !visualizers.isEmpty();
+      case GexperimentPackage.EXPERIMENT__SERIES:
+        return series != null && !series.isEmpty();
     }
     return super.eIsSet(featureID);
   }

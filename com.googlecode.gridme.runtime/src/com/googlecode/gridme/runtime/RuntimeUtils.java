@@ -23,6 +23,8 @@ package com.googlecode.gridme.runtime;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -170,14 +172,14 @@ public class RuntimeUtils
         + paramName.substring(1, paramName.length());
   }
   
-  public static String getResultFileName(String experiment, String run)
+  public static String getResultFileName(String experiment, String run, String series)
   {
-    return experiment + "." + run + ".gstats";
+    return experiment + "." + series + "." + run + ".gstats";
   }
 
   public static String getRunNameFromFileName(String experiment, String runFileName)
   {
-    Pattern p = Pattern.compile(experiment + "\\.(.+)\\.gstats");
+    Pattern p = Pattern.compile(getRunFilePattern(experiment));
     Matcher matcher = p.matcher(runFileName);
     if(!matcher.matches())
     {
@@ -221,5 +223,23 @@ public class RuntimeUtils
     {
       return str;
     }
+  }
+  
+  public static String stringJoin(List<String> values, String delimeter)
+  {
+    Iterator<String> iter = values.iterator();
+    
+    if(!iter.hasNext()) return "";
+    StringBuilder buffer = new StringBuilder(iter.next());
+    while ( iter.hasNext() )
+    {
+      buffer.append(delimeter).append(iter.next());
+    }
+    return buffer.toString();
+  }
+
+  public static String getRunFilePattern(String experimentName)
+  {
+    return experimentName + "\\.(.+)\\.gstats";
   }
 }

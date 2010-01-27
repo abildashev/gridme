@@ -102,6 +102,15 @@ public interface GexperimentFactory extends EFactory
   ParameterValue createParameterValue();
 
   /**
+   * Returns a new object of class '<em>Series Parameter</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Series Parameter</em>'.
+   * @generated
+   */
+  SeriesParameter createSeriesParameter();
+
+  /**
    * Returns the package supported by this factory.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

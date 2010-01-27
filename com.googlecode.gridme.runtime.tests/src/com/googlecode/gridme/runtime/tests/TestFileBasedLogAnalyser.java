@@ -515,4 +515,26 @@ public class TestFileBasedLogAnalyser
       FastLogger.deleteDatabase(new File(TESTDB));
     }
   }
+  
+  @Test
+  public void test21() throws GRuntimeException
+  {
+    try
+    {
+      FastLogger logger = new FastLogger(new File(TESTDB), false);
+      logger.logParameter("workload,123", "a=b=c");
+      logger.logParameter("workload2", "e13614567");
+      logger.close();
+
+      // Read metric
+      FileBasedLogAnalyser fa = new FileBasedLogAnalyser(new File(TESTDB));
+      assertTrue(fa.getParameterValues().get("workload,123").equals("a=b=c"));
+      assertTrue(fa.getParameterValues().get("workload2").equals("e13614567"));
+    }
+    finally
+    {
+      FastLogger.deleteDatabase(new File(TESTDB));
+    }
+  }
+  
 }

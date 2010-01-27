@@ -96,6 +96,7 @@ public class GexperimentFactoryImpl extends EFactoryImpl implements GexperimentF
       case GexperimentPackage.CHART: return createChart();
       case GexperimentPackage.RUN_RESULT: return createRunResult();
       case GexperimentPackage.PARAMETER_VALUE: return createParameterValue();
+      case GexperimentPackage.SERIES_PARAMETER: return createSeriesParameter();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -199,6 +200,17 @@ public class GexperimentFactoryImpl extends EFactoryImpl implements GexperimentF
   {
     ParameterValueImpl parameterValue = new ParameterValueImpl();
     return parameterValue;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SeriesParameter createSeriesParameter()
+  {
+    SeriesParameterImpl seriesParameter = new SeriesParameterImpl();
+    return seriesParameter;
   }
 
   /**
