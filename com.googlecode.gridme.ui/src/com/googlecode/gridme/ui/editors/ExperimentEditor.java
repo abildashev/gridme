@@ -117,6 +117,7 @@ import com.googlecode.gridme.runtime.RuntimeUtils;
 import com.googlecode.gridme.runtime.exceptions.GExecException;
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
 import com.googlecode.gridme.runtime.exceptions.LoggerException;
+import com.googlecode.gridme.runtime.exceptions.MonitorCanceledException;
 import com.googlecode.gridme.runtime.log.GanttLogger;
 import com.googlecode.gridme.runtime.log.LogManifest;
 import com.googlecode.gridme.runtime.log.MetricsLogger;
@@ -1621,17 +1622,25 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
               {
                 for(TableItem item : runList.getSelection())
                 {
-                  executeRunSeries((Run) item.getData());
-                  updateRunInTable((Run) item.getData());
+                  try
+                  {
+                    executeRunSeries((Run) item.getData());
+                  }
+                  catch (MonitorCanceledException e)
+                  {
+                    break;
+                  }
                 } 
               }
             }
             else
             {
               executeRunSeries(selectedRun);
-              updateRunInTable(selectedRun);
             }
           }
+        }
+        catch(MonitorCanceledException e)
+        {
         }
         catch(GRuntimeException e)
         {
@@ -1831,6 +1840,11 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
             {
               throw new GRuntimeException(errors.getLastError());
             }
+            
+            if(monitor.isCanceled())
+            {
+              throw new MonitorCanceledException();
+            }
           }
           catch(GRuntimeException e)
           {
@@ -1845,7 +1859,14 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     }
     catch(InvocationTargetException e)
     {
-      throw new GExecException(e.getTargetException());
+      Throwable x = e.getTargetException();
+      
+      if(x instanceof MonitorCanceledException)
+      {
+        throw (MonitorCanceledException)x;
+      }
+      
+      throw new GExecException(x);
     }
     catch(InterruptedException e)
     {
