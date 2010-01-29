@@ -21,6 +21,10 @@
  ******************************************************************************/
 package com.googlecode.gridme.runtime.visual;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
 import com.googlecode.gridme.runtime.log.LogAnalyser;
 import com.googlecode.gridme.runtime.log.LogManifest;
@@ -33,19 +37,24 @@ public class LogEntry
 {
   private final String name;
   private final String description;
-  private final LogAnalyser log;
+  private List<LogAnalyser> logs;
 
-  /**
-   * @param name default name. Default name will be used if log
-   * description is empty.
-   * @param log
-   * @throws GRuntimeException 
-   */
   public LogEntry(String name, LogAnalyser log) throws GRuntimeException
   {
-    this.log = log;
+    this(name, Arrays.asList(new LogAnalyser[]{log}));
+  }
+  
+  public LogEntry(String name, List<LogAnalyser> logs) throws GRuntimeException
+  {
+    this.logs = logs;
     this.name = name;
-    LogManifest man = log.getManifest();
+    
+    LogManifest man = null;
+    if(!logs.isEmpty())
+    {
+      man = logs.get(0).getManifest();
+    }
+    
     if(man != null && !man.getDescription().isEmpty())
     {
       this.description = man.getDescription();
@@ -61,11 +70,16 @@ public class LogEntry
     return name;
   }
 
-  public LogAnalyser getLog()
+  public List<LogAnalyser> getLogs()
   {
-    return log;
+    return logs;
   }
 
+  public LogAnalyser getLog()
+  {
+    return logs.get(0);
+  }
+  
   public String getDescription()
   {
     return description;

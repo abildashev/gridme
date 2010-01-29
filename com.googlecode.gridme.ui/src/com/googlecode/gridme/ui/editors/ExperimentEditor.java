@@ -23,11 +23,13 @@ package com.googlecode.gridme.ui.editors;
 
 import gexperiment.Chart;
 import gexperiment.Experiment;
+import gexperiment.GroupRunResult;
 import gexperiment.ParameterValue;
 import gexperiment.Run;
 import gexperiment.RunMode;
 import gexperiment.RunResult;
 import gexperiment.SeriesParameter;
+import gexperiment.SingleRunResult;
 import gexperiment.Visualizer;
 import gexperiment.impl.GexperimentFactoryImpl;
 import gmodel.GenericModelElement;
@@ -119,6 +121,7 @@ import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
 import com.googlecode.gridme.runtime.exceptions.LoggerException;
 import com.googlecode.gridme.runtime.exceptions.MonitorCanceledException;
 import com.googlecode.gridme.runtime.log.GanttLogger;
+import com.googlecode.gridme.runtime.log.LogAnalyser;
 import com.googlecode.gridme.runtime.log.LogManifest;
 import com.googlecode.gridme.runtime.log.MetricsLogger;
 import com.googlecode.gridme.runtime.log.impl.FastGanttLogger;
@@ -142,6 +145,7 @@ import com.googlecode.gridme.ui.ImplScanner;
 import com.googlecode.gridme.ui.PlatformUtils;
 import com.googlecode.gridme.ui.UIErrorLogger;
 import com.googlecode.gridme.ui.UIProgressMonitor;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Single;
 
 public class ExperimentEditor extends MultiPageEditorPart implements ModifyListener, SelectionListener
 {
@@ -189,19 +193,13 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     @Override
     public void run()
     {
-      ElementListSelectionDialog dlg = new ElementListSelectionDialog(visualizerInputList.getShell(),
-          new LabelProvider());
-      dlg.setTitle("Select run results files");
-      dlg.setFilter("*");
-      dlg.setIgnoreCase(true);
-      dlg.setElements(getAvailableInputs());
-      dlg.setMultipleSelection(true);
-
-      if(dlg.open() == Window.OK && dlg.getResult() != null)
+      Object[] inputs = showInputSelectionDialog();
+      
+      if(inputs != null)
       {
-        for(Object item : dlg.getResult())
+        for(Object item : inputs)
         {
-          RunResult input = GexperimentFactoryImpl.eINSTANCE.createRunResult();
+          RunResult input = GexperimentFactoryImpl.eINSTANCE.createSingleRunResult();
           input.setName((String) item);
           selectedVisualizer.getInput().add(input);
           addVisualizerInput(input);
@@ -211,6 +209,41 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     }
   }
 
+  class AddInputGroupAction extends Action
+  {
+    @Override
+    public String getText()
+    {
+      return "Add group";
+    }
+
+    @Override
+    public void run()
+    {
+      Object[] inputs = showInputSelectionDialog();
+      
+      if(inputs != null)
+      {
+        GroupRunResult ginput = GexperimentFactoryImpl.eINSTANCE.createGroupRunResult();
+        
+        for(Object item : inputs)
+        {
+          SingleRunResult sinput = GexperimentFactoryImpl.eINSTANCE.createSingleRunResult();
+          sinput.setName((String) item);
+          ginput.getResults().add(sinput);
+        }
+        
+        if(!ginput.getResults().isEmpty())
+        {
+          ginput.setName(ginput.getResults().get(0).getName() + " (group)");
+          selectedVisualizer.getInput().add(ginput);
+          addVisualizerInput(ginput);
+          pageModified();
+        }
+      }
+    }
+  }
+  
   class AddChartAction extends Action
   {
     @Override
@@ -378,7 +411,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
 
     private boolean validateInternal()
     {
-      if(name.getText().isEmpty())
+      if(!name.getText().matches("\\w+"))
       {
         setErrorMessage("Enter a valid name");
         nameDeco.show();
@@ -1180,25 +1213,35 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     TableItem item = new TableItem(visualizerInputList, SWT.NONE);
     item.setData(input);
     StringBuilder params = new StringBuilder();
-    File base = new File(modelRootFile.getProject().getLocation().toPortableString());
-    try
+    String groupLabel = "";
+    
+    if(input instanceof SingleRunResult)
     {
-      FileBasedLogAnalyser log = new FileBasedLogAnalyser(new File(base, input.getName()));
-      Map<String,String> pvals = log.getParameterValues();
-      for(Iterator<String> it = pvals.keySet().iterator(); it.hasNext();)
+      File base = new File(modelRootFile.getProject().getLocation().toPortableString());
+      try
       {
-        String key = it.next();
-        params.append(key + "=" + pvals.get(key));
-        if(it.hasNext())
+        FileBasedLogAnalyser log = new FileBasedLogAnalyser(new File(base, input.getName()));
+        Map<String,String> pvals = log.getParameterValues();
+        for(Iterator<String> it = pvals.keySet().iterator(); it.hasNext();)
         {
-          params.append(",");
+          String key = it.next();
+          params.append(key + "=" + pvals.get(key));
+          if(it.hasNext())
+          {
+            params.append(",");
+          }
         }
       }
+      catch(GRuntimeException e)
+      {
+      }
     }
-    catch(GRuntimeException e)
+    else
     {
+      groupLabel = "" + ((GroupRunResult)input).getResults().size() + " inputs";
     }
-    item.setText(new String[] { input.getName(), params.toString() } );
+    
+    item.setText(new String[] { input.getName(), groupLabel, params.toString() } );
   }
 
   private String getExperimentName()
@@ -1211,9 +1254,16 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     HashSet<String> metrics = new HashSet<String>();
     for(RunResult run : selectedVisualizer.getInput())
     {
+      String runName = run.getName();
+      
+      if(run instanceof GroupRunResult)
+      {
+        runName = ((GroupRunResult)run).getResults().get(0).getName();
+      }
+      
       try
       {
-        File resultsFile = findFile(run.getName()).getLocation().toFile();
+        File resultsFile = findFile(runName).getLocation().toFile();
         FileBasedLogAnalyser fa = new FileBasedLogAnalyser(resultsFile);
         metrics.addAll(fa.getMetrics(element));
       }
@@ -1238,9 +1288,25 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
 
       try
       {
-        File resultsFile = findFile(run.getName()).getLocation().toFile();
-        FileBasedLogAnalyser fa = new FileBasedLogAnalyser(resultsFile);
-        result = fa.getMetricsDescription(name);
+        if(run instanceof GroupRunResult)
+        {
+          for(SingleRunResult srun: ((GroupRunResult)run).getResults())
+          {
+            result = findMetricDescription(name, srun);
+            if(result != null)
+            {
+              return result;
+            }
+          }
+        }
+        else
+        {
+          result = findMetricDescription(name, (SingleRunResult) run);
+          if(result != null)
+          {
+            return result;
+          }
+        }
       }
       catch(GRuntimeException e)
       {
@@ -1250,14 +1316,30 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     return result;
   }
 
+  private String findMetricDescription(String name, SingleRunResult srun) throws LoggerException, GRuntimeException
+  {
+    String result;
+    File resultsFile = findFile(srun.getName()).getLocation().toFile();
+    FileBasedLogAnalyser fa = new FileBasedLogAnalyser(resultsFile);
+    result = fa.getMetricsDescription(name);
+    return result;
+  }
+
   private Collection<String> getAvailableElements()
   {
     HashSet<String> elements = new HashSet<String>();
     for(RunResult run : selectedVisualizer.getInput())
     {
+      String runName = run.getName();
+      
+      if(run instanceof GroupRunResult)
+      {
+        runName = ((GroupRunResult)run).getResults().get(0).getName();
+      }
+      
       try
       {
-        File resultsFile = findFile(run.getName()).getLocation().toFile();
+        File resultsFile = findFile(runName).getLocation().toFile();
         FileBasedLogAnalyser fa = new FileBasedLogAnalyser(resultsFile);
         elements.addAll(fa.getElements());
       }
@@ -2713,8 +2795,12 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     scenarioName.setWidth(200);
     scenarioName.setText("Run scenario results");
 
+    TableColumn scenarioGroup = new TableColumn(visualizerInputList, SWT.NONE);
+    scenarioGroup.setWidth(100);
+    scenarioGroup.setText("Group");
+    
     TableColumn scenarioParams = new TableColumn(visualizerInputList, SWT.NONE);
-    scenarioParams.setWidth(800);
+    scenarioParams.setWidth(400);
     scenarioParams.setText("Parameters");
     
     MenuManager popupMenu = new MenuManager();
@@ -2732,6 +2818,8 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
         {
           del.setEnabled(false);
         }
+        
+        manager.add(new AddInputGroupAction());
       }
     });
     visualizerInputList.setMenu(popupMenu.createContextMenu(visualizerInputList));
@@ -2815,9 +2903,23 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
 
     for(RunResult input : source.getInput())
     {
-      RunResult newInput = GexperimentFactoryImpl.eINSTANCE.createRunResult();
-      target.getInput().add(newInput);
+      RunResult newInput = null;
+      if(input instanceof SingleRunResult)
+      {
+        newInput = GexperimentFactoryImpl.eINSTANCE.createSingleRunResult();
+      }
+      else
+      {
+        newInput = GexperimentFactoryImpl.eINSTANCE.createGroupRunResult();
+        for(SingleRunResult input2: ((GroupRunResult)input).getResults())
+        {
+          SingleRunResult newInput2 = GexperimentFactoryImpl.eINSTANCE.createSingleRunResult();
+          newInput2.setName(input2.getName());
+          ((GroupRunResult)newInput).getResults().add(newInput2);
+        }
+      }
       newInput.setName(input.getName());
+      target.getInput().add(newInput);
     }
   }
 
@@ -2900,7 +3002,19 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     final ArrayList<LogEntry> logList = new ArrayList<LogEntry>();
     for(RunResult res : visual.getInput())
     {
-      logList.add(new LogEntry(res.getName(), new FileBasedLogAnalyser(new File(base, res.getName()))));
+      List<LogAnalyser> logs = new ArrayList<LogAnalyser>();
+      if(res instanceof GroupRunResult)
+      {
+        for(SingleRunResult resrun: ((GroupRunResult) res).getResults())
+        {
+          logs.add(new FileBasedLogAnalyser(new File(base, resrun.getName())));
+        }
+      }
+      else
+      {
+        logs.add(new FileBasedLogAnalyser(new File(base, res.getName())));
+      }
+      logList.add(new LogEntry(res.getName(), logs));
     }
 
     try
@@ -3170,5 +3284,22 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
   public void widgetSelected(SelectionEvent e)
   {
     pageModified();
+  }
+  
+  private Object[] showInputSelectionDialog()
+  {
+    ElementListSelectionDialog dlg = new ElementListSelectionDialog(visualizerInputList.getShell(),
+        new LabelProvider());
+    dlg.setTitle("Select run results files");
+    dlg.setFilter("*");
+    dlg.setIgnoreCase(true);
+    dlg.setElements(getAvailableInputs());
+    dlg.setMultipleSelection(true);
+
+    if(dlg.open() == Window.OK && dlg.getResult() != null)
+    {
+      return dlg.getResult();
+    }
+    return null;
   }
 }

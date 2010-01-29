@@ -461,6 +461,71 @@ public interface GexperimentPackage extends EPackage
   int SERIES_PARAMETER_FEATURE_COUNT = GmodelPackage.NAMED_FEATURE_COUNT + 1;
 
   /**
+   * The meta object id for the '{@link gexperiment.impl.SingleRunResultImpl <em>Single Run Result</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see gexperiment.impl.SingleRunResultImpl
+   * @see gexperiment.impl.GexperimentPackageImpl#getSingleRunResult()
+   * @generated
+   */
+  int SINGLE_RUN_RESULT = 7;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SINGLE_RUN_RESULT__NAME = RUN_RESULT__NAME;
+
+  /**
+   * The number of structural features of the '<em>Single Run Result</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SINGLE_RUN_RESULT_FEATURE_COUNT = RUN_RESULT_FEATURE_COUNT + 0;
+
+  /**
+   * The meta object id for the '{@link gexperiment.impl.GroupRunResultImpl <em>Group Run Result</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see gexperiment.impl.GroupRunResultImpl
+   * @see gexperiment.impl.GexperimentPackageImpl#getGroupRunResult()
+   * @generated
+   */
+  int GROUP_RUN_RESULT = 8;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GROUP_RUN_RESULT__NAME = RUN_RESULT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Results</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GROUP_RUN_RESULT__RESULTS = RUN_RESULT_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Group Run Result</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GROUP_RUN_RESULT_FEATURE_COUNT = RUN_RESULT_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link gexperiment.RunMode <em>Run Mode</em>}' enum.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -468,7 +533,7 @@ public interface GexperimentPackage extends EPackage
    * @see gexperiment.impl.GexperimentPackageImpl#getRunMode()
    * @generated
    */
-  int RUN_MODE = 7;
+  int RUN_MODE = 9;
 
 
   /**
@@ -795,6 +860,37 @@ public interface GexperimentPackage extends EPackage
   EAttribute getSeriesParameter_Values();
 
   /**
+   * Returns the meta object for class '{@link gexperiment.SingleRunResult <em>Single Run Result</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Single Run Result</em>'.
+   * @see gexperiment.SingleRunResult
+   * @generated
+   */
+  EClass getSingleRunResult();
+
+  /**
+   * Returns the meta object for class '{@link gexperiment.GroupRunResult <em>Group Run Result</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Group Run Result</em>'.
+   * @see gexperiment.GroupRunResult
+   * @generated
+   */
+  EClass getGroupRunResult();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link gexperiment.GroupRunResult#getResults <em>Results</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Results</em>'.
+   * @see gexperiment.GroupRunResult#getResults()
+   * @see #getGroupRunResult()
+   * @generated
+   */
+  EReference getGroupRunResult_Results();
+
+  /**
    * Returns the meta object for enum '{@link gexperiment.RunMode <em>Run Mode</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1080,6 +1176,34 @@ public interface GexperimentPackage extends EPackage
      * @generated
      */
     EAttribute SERIES_PARAMETER__VALUES = eINSTANCE.getSeriesParameter_Values();
+
+    /**
+     * The meta object literal for the '{@link gexperiment.impl.SingleRunResultImpl <em>Single Run Result</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see gexperiment.impl.SingleRunResultImpl
+     * @see gexperiment.impl.GexperimentPackageImpl#getSingleRunResult()
+     * @generated
+     */
+    EClass SINGLE_RUN_RESULT = eINSTANCE.getSingleRunResult();
+
+    /**
+     * The meta object literal for the '{@link gexperiment.impl.GroupRunResultImpl <em>Group Run Result</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see gexperiment.impl.GroupRunResultImpl
+     * @see gexperiment.impl.GexperimentPackageImpl#getGroupRunResult()
+     * @generated
+     */
+    EClass GROUP_RUN_RESULT = eINSTANCE.getGroupRunResult();
+
+    /**
+     * The meta object literal for the '<em><b>Results</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference GROUP_RUN_RESULT__RESULTS = eINSTANCE.getGroupRunResult_Results();
 
     /**
      * The meta object literal for the '{@link gexperiment.RunMode <em>Run Mode</em>}' enum.

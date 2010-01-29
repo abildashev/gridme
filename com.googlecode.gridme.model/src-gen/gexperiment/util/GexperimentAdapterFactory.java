@@ -137,6 +137,16 @@ public class GexperimentAdapterFactory extends AdapterFactoryImpl
         return createSeriesParameterAdapter();
       }
       @Override
+      public Adapter caseSingleRunResult(SingleRunResult object)
+      {
+        return createSingleRunResultAdapter();
+      }
+      @Override
+      public Adapter caseGroupRunResult(GroupRunResult object)
+      {
+        return createGroupRunResultAdapter();
+      }
+      @Override
       public Adapter caseNamed(Named object)
       {
         return createNamedAdapter();
@@ -264,6 +274,36 @@ public class GexperimentAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createSeriesParameterAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link gexperiment.SingleRunResult <em>Single Run Result</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see gexperiment.SingleRunResult
+   * @generated
+   */
+  public Adapter createSingleRunResultAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link gexperiment.GroupRunResult <em>Group Run Result</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see gexperiment.GroupRunResult
+   * @generated
+   */
+  public Adapter createGroupRunResultAdapter()
   {
     return null;
   }

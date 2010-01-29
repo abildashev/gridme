@@ -94,9 +94,10 @@ public class GexperimentFactoryImpl extends EFactoryImpl implements GexperimentF
       case GexperimentPackage.RUN: return createRun();
       case GexperimentPackage.VISUALIZER: return createVisualizer();
       case GexperimentPackage.CHART: return createChart();
-      case GexperimentPackage.RUN_RESULT: return createRunResult();
       case GexperimentPackage.PARAMETER_VALUE: return createParameterValue();
       case GexperimentPackage.SERIES_PARAMETER: return createSeriesParameter();
+      case GexperimentPackage.SINGLE_RUN_RESULT: return createSingleRunResult();
+      case GexperimentPackage.GROUP_RUN_RESULT: return createGroupRunResult();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -185,17 +186,6 @@ public class GexperimentFactoryImpl extends EFactoryImpl implements GexperimentF
    * <!-- end-user-doc -->
    * @generated
    */
-  public RunResult createRunResult()
-  {
-    RunResultImpl runResult = new RunResultImpl();
-    return runResult;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public ParameterValue createParameterValue()
   {
     ParameterValueImpl parameterValue = new ParameterValueImpl();
@@ -211,6 +201,28 @@ public class GexperimentFactoryImpl extends EFactoryImpl implements GexperimentF
   {
     SeriesParameterImpl seriesParameter = new SeriesParameterImpl();
     return seriesParameter;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SingleRunResult createSingleRunResult()
+  {
+    SingleRunResultImpl singleRunResult = new SingleRunResultImpl();
+    return singleRunResult;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public GroupRunResult createGroupRunResult()
+  {
+    GroupRunResultImpl groupRunResult = new GroupRunResultImpl();
+    return groupRunResult;
   }
 
   /**

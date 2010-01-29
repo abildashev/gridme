@@ -23,8 +23,12 @@ package com.googlecode.gridme.ui.view;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,6 +38,7 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.internal.ui.refactoring.reorg.NewNameQueries;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -532,18 +537,27 @@ public class GridProjectView extends ViewPart
       Class<? extends GTreeItem> c, HashMap<String, GTreeExperiment> experiments)
   {
     String[] s = name.split("\\.");
-    if(s.length == 2)
+    
+    if(s.length >= 2 && s.length <= 4)
     {
-      GTreeExperiment exp = experiments.get(s[0]);
-      if(exp != null)
+      Pattern p = Pattern.compile("\\w+\\.(.+)");
+      Matcher m = p.matcher(name);
+      
+      if(m.matches())
       {
-        if(c.equals(GTreeVisual.class))
+        String xname = m.group(1);
+      
+        GTreeExperiment exp = experiments.get(s[0]);
+        if(exp != null)
         {
-          exp.addVisual(s[1], child);
-        }
-        else if(c.equals(GTreeChart.class))
-        {
-          exp.addChart(s[1], child);
+          if(c.equals(GTreeVisual.class))
+          {
+            exp.addVisual(xname.toString(), child);
+          }
+          else if(c.equals(GTreeChart.class))
+          {
+            exp.addChart(xname.toString(), child);
+          }
         }
       }
     }

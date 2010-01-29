@@ -36,7 +36,7 @@ import gmodel.Named;
  *
  *
  * @see gexperiment.GexperimentPackage#getRunResult()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface RunResult extends Named

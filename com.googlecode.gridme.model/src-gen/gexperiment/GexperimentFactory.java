@@ -84,15 +84,6 @@ public interface GexperimentFactory extends EFactory
   Chart createChart();
 
   /**
-   * Returns a new object of class '<em>Run Result</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Run Result</em>'.
-   * @generated
-   */
-  RunResult createRunResult();
-
-  /**
    * Returns a new object of class '<em>Parameter Value</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -109,6 +100,24 @@ public interface GexperimentFactory extends EFactory
    * @generated
    */
   SeriesParameter createSeriesParameter();
+
+  /**
+   * Returns a new object of class '<em>Single Run Result</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Single Run Result</em>'.
+   * @generated
+   */
+  SingleRunResult createSingleRunResult();
+
+  /**
+   * Returns a new object of class '<em>Group Run Result</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Group Run Result</em>'.
+   * @generated
+   */
+  GroupRunResult createGroupRunResult();
 
   /**
    * Returns the package supported by this factory.

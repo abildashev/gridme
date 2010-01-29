@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.EClass;
  *
  * @generated
  */
-public class RunResultImpl extends NamedImpl implements RunResult
+public abstract class RunResultImpl extends NamedImpl implements RunResult
 {
   /**
    * <!-- begin-user-doc -->

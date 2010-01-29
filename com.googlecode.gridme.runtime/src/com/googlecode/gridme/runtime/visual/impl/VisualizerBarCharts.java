@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ import com.googlecode.gridme.runtime.RuntimeUtils;
 import com.googlecode.gridme.runtime.VisualizerImplementation;
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
 import com.googlecode.gridme.runtime.log.AnalyserResult;
+import com.googlecode.gridme.runtime.log.LogAnalyser;
 import com.googlecode.gridme.runtime.visual.LogEntry;
 import com.googlecode.gridme.runtime.visual.VChart;
 import com.googlecode.gridme.simstate.ModelProgressMonitor;
@@ -52,7 +54,8 @@ import com.googlecode.gridme.simstate.ModelProgressMonitor;
 @VisualizerImplementation("Builds line charts")
 public class VisualizerBarCharts extends GroupedChartsVisualizer
 {
-  private enum Operation {
+  private enum Operation
+  {
     AVERAGE, MAX, AGGREGATE
   };
 
@@ -62,8 +65,7 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
 
   private Operation operation;
 
-  @Parameter(description = "How to compute a value: " + OP_AVG + ", "
-      + OP_MAX + ", " + OP_AGG, required = false, hasParams = false, category = 0)
+  @Parameter(description = "How to compute a value: " + OP_AVG + ", " + OP_MAX + ", " + OP_AGG, required = false, hasParams = false, category = 0)
   public void setOperation(String value) throws GRuntimeException
   {
     if(OP_MAX.equals(value))
@@ -85,8 +87,9 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
 
   /**
    * Default constructor.
-   *
-   * @throws GRuntimeException if some of the required parameters are not set.
+   * 
+   * @throws GRuntimeException
+   *           if some of the required parameters are not set.
    */
   public VisualizerBarCharts(String name) throws GRuntimeException
   {
@@ -96,9 +99,8 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
 
   @SuppressWarnings("serial")
   @Override
-  public void execute(String resultPath, long startTime, long stopTime,
-      List<VChart> charts, List<LogEntry> logList, ModelProgressMonitor monitor)
-      throws Exception
+  public void execute(String resultPath, long startTime, long stopTime, List<VChart> charts, List<LogEntry> logList,
+      ModelProgressMonitor monitor) throws Exception
   {
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     int total = logList.size() * charts.size();
@@ -111,33 +113,46 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
     {
       for(VChart chart : charts)
       {
-        AnalyserResult values = entry.getLog().getValueChange(
-            chart.getMetricSpec(), Arrays.asList(chart.getElementSpec()),
-            getImgWidth(), startTime, stopTime);
+        List<AnalyserResult> values = new ArrayList<AnalyserResult>();
+        for(LogAnalyser log : entry.getLogs())
+        {
+          values.add(log.getValueChange(chart.getMetricSpec(), Arrays.asList(chart.getElementSpec()), getImgWidth(),
+              startTime, stopTime));
+        }
 
         double value = 0;
 
         switch(operation)
         {
           case AVERAGE:
-            value = values.getArithmeticMean();
+            for(AnalyserResult val: values)
+            {
+              value += val.getArithmeticMean(); 
+            }
             break;
 
           case MAX:
-            value = values.getPeak().getValue();
+            for(AnalyserResult val: values)
+            {
+              value += val.getPeak().getValue(); 
+            }
             break;
 
           case AGGREGATE:
-            value = values.getAggregate();
+            for(AnalyserResult val: values)
+            {
+              value += val.getAggregate(); 
+            }
             break;
 
           default:
             assert (false);
         }
+        
+        value = value / values.size();        
 
         dataset.addValue(value, chart.getElementSpec() + ":"
-            + entry.getLog().getMetricsDescription(chart.getMetricSpec()),
-            entry.getName());
+            + entry.getLogs().get(0).getMetricsDescription(chart.getMetricSpec()), entry.getName());
 
         txtOut.println(fmt.format(value));
 
@@ -146,8 +161,7 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
       txtOut.println();
     }
 
-    JFreeChart barChart = ChartFactory.createBarChart(name + " ["
-        + RuntimeUtils.formatTime(startTime) + ", "
+    JFreeChart barChart = ChartFactory.createBarChart(name + " [" + RuntimeUtils.formatTime(startTime) + ", "
         + RuntimeUtils.formatTime(stopTime) + "]", // chart title
         "", // domain axis label
         "metrics value " + getMetricsTypeName(), // range axis label
@@ -167,12 +181,11 @@ public class VisualizerBarCharts extends GroupedChartsVisualizer
     myRange.setNumberFormatOverride(getLabelFormat());
     plot.setRangeAxis(myRange);
 
-    renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator(
-        "{2}", getLabelFormat()));
+    renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", getLabelFormat()));
     renderer.setBaseItemLabelsVisible(true);
 
-    ChartUtilities.writeChartAsPNG(new FileOutputStream(new File(resultPath
-        + ".png")), barChart, getImgWidth(), getImgHeight());
+    ChartUtilities.writeChartAsPNG(new FileOutputStream(new File(resultPath + ".png")), barChart, getImgWidth(),
+        getImgHeight());
 
     monitor.done();
     txtOut.close();

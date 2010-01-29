@@ -31,11 +31,13 @@ import gexperiment.Chart;
 import gexperiment.Experiment;
 import gexperiment.GexperimentFactory;
 import gexperiment.GexperimentPackage;
+import gexperiment.GroupRunResult;
 import gexperiment.ParameterValue;
 import gexperiment.Run;
 import gexperiment.RunMode;
 import gexperiment.RunResult;
 import gexperiment.SeriesParameter;
+import gexperiment.SingleRunResult;
 import gexperiment.Visualizer;
 
 import gmodel.GmodelPackage;
@@ -106,6 +108,20 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
    * @generated
    */
   private EClass seriesParameterEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass singleRunResultEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass groupRunResultEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -487,6 +503,36 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getSingleRunResult()
+  {
+    return singleRunResultEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getGroupRunResult()
+  {
+    return groupRunResultEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGroupRunResult_Results()
+  {
+    return (EReference)groupRunResultEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EEnum getRunMode()
   {
     return runModeEEnum;
@@ -559,6 +605,11 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     seriesParameterEClass = createEClass(SERIES_PARAMETER);
     createEAttribute(seriesParameterEClass, SERIES_PARAMETER__VALUES);
 
+    singleRunResultEClass = createEClass(SINGLE_RUN_RESULT);
+
+    groupRunResultEClass = createEClass(GROUP_RUN_RESULT);
+    createEReference(groupRunResultEClass, GROUP_RUN_RESULT__RESULTS);
+
     // Create enums
     runModeEEnum = createEEnum(RUN_MODE);
   }
@@ -599,6 +650,8 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     visualizerEClass.getESuperTypes().add(theGmodelPackage.getNamed());
     runResultEClass.getESuperTypes().add(theGmodelPackage.getNamed());
     seriesParameterEClass.getESuperTypes().add(theGmodelPackage.getNamed());
+    singleRunResultEClass.getESuperTypes().add(this.getRunResult());
+    groupRunResultEClass.getESuperTypes().add(this.getRunResult());
 
     // Initialize classes and features; add operations and parameters
     initEClass(experimentEClass, Experiment.class, "Experiment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -629,7 +682,7 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     initEAttribute(getChart_Element(), ecorePackage.getEString(), "element", null, 1, 1, Chart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getChart_Metric(), ecorePackage.getEString(), "metric", null, 1, 1, Chart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(runResultEClass, RunResult.class, "RunResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(runResultEClass, RunResult.class, "RunResult", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(parameterValueEClass, ParameterValue.class, "ParameterValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getParameterValue_Elements(), theGmodelPackage.getModelElement(), null, "elements", null, 1, -1, ParameterValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -637,6 +690,11 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
 
     initEClass(seriesParameterEClass, SeriesParameter.class, "SeriesParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getSeriesParameter_Values(), ecorePackage.getEString(), "values", "", 1, -1, SeriesParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(singleRunResultEClass, SingleRunResult.class, "SingleRunResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(groupRunResultEClass, GroupRunResult.class, "GroupRunResult", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getGroupRunResult_Results(), this.getSingleRunResult(), null, "results", null, 1, -1, GroupRunResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Initialize enums and add enum literals
     initEEnum(runModeEEnum, RunMode.class, "RunMode");

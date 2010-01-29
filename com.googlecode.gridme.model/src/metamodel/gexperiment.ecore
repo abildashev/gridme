@@ -52,7 +52,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="metric" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RunResult" eSuperTypes="gmodel.ecore#//Named"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RunResult" abstract="true" eSuperTypes="gmodel.ecore#//Named"/>
   <eClassifiers xsi:type="ecore:EClass" name="ParameterValue">
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" lowerBound="1"
         upperBound="-1" eType="ecore:EClass gmodel.ecore#//ModelElement"/>
@@ -63,5 +63,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="values" lowerBound="1"
         upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SingleRunResult" eSuperTypes="#//RunResult"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupRunResult" eSuperTypes="#//RunResult">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="results" lowerBound="1"
+        upperBound="-1" eType="#//SingleRunResult" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
