@@ -365,4 +365,19 @@ public class PowerAwareCluster extends BaseCluster
   {
     holdTasks += holds;
   }
+
+  public Integer getWattsSleep()
+  {
+    return wattsSleep;
+  }
+
+  public Integer getWattsIdle()
+  {
+    return wattsIdle;
+  }
+
+  public Integer getPowerOnDelay()
+  {
+    return powerOnDelay;
+  }
 }

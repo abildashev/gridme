@@ -21,15 +21,13 @@
  ******************************************************************************/
 package com.googlecode.gridme.runtime.schedule.impl.power;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import com.googlecode.gridme.runtime.PowerSupply;
 import com.googlecode.gridme.runtime.elements.ClusterPowerManager;
 import com.googlecode.gridme.runtime.elements.LocalPowerManagementDecision;
 import com.googlecode.gridme.runtime.elements.PowerAwareCluster;
-import com.googlecode.gridme.runtime.elements.PowerAwareNode;
 import com.googlecode.gridme.runtime.elements.PowerManagementDecisionSleep;
 import com.googlecode.gridme.runtime.elements.PowerManagementDecisionWakeup;
 import com.googlecode.gridme.runtime.exceptions.GRuntimeException;
@@ -40,17 +38,17 @@ import com.googlecode.gridme.runtime.schedule.GQueue;
 import com.googlecode.gridme.runtime.schedule.GTask;
 
 /**
- * Basic implementation of cluster power manager. It computes total required width
- * of cluster according to queue contents and then leaves this amount of nodes powered on.
+ * Basic implementation of cluster power manager.
+ * It leaves given amount of nodes powered on.
  * Implementation is SMP aware - nodes from one logical node (node group) will be powered on
  * or off simultaneously.
  */
-public abstract class TotalRequiredWidthPM implements ClusterPowerManager
+public abstract class BasicPM implements ClusterPowerManager
 {
   protected PowerAwareCluster cluster;
   protected PowerSupply powerSuply;
 
-  public TotalRequiredWidthPM()
+  public BasicPM()
   {
     powerSuply = new PowerSupply(PowerAwareCluster.DAY_START, PowerAwareCluster.DAY_END);
   }
@@ -62,60 +60,12 @@ public abstract class TotalRequiredWidthPM implements ClusterPowerManager
   }
 
   /**
-   * Returns true if this task needs nodes for execution.
+   * Creates a list of PM decisions.
+   * 
+   * @param dlist - list of PM decisions
+   * @param onCount - number of nodes to power on. If <0 the nodes will be powered off.
    */
-  protected abstract boolean mustExecute(GTask task);
-
-  /**
-   * Returns true if this node can be powered on now.
-   */
-  protected abstract boolean canPowerOn(PowerAwareNode node);
-
-  /**
-   * Returns true if this node can be powered off now.
-   */
-  protected abstract boolean canPowerOff(PowerAwareNode node);
-
-  /**
-   * Computes total width of tasks in the queue for which mustExecute
-   * returns true. Leaves this number of nodes on.
-   */
-  @Override
-  public Collection<LocalPowerManagementDecision> manage()
-  {
-    ArrayList<LocalPowerManagementDecision> decision = new ArrayList<LocalPowerManagementDecision>();
-
-    int widthRequired = 0;
-    for(Iterator<GTask> it = cluster.getScheduler().getQueue().getIterator(); it.hasNext();)
-    {
-      GTask task = it.next();
-      if(mustExecute(task))
-      {
-        widthRequired += task.getNodesMin();
-      }
-    }
-
-    powerOn(cluster, decision, widthRequired - cluster.getFreeNodes());
-
-    return decision;
-  }
-
-  /**
-   * Creates LocalPowerManagementDecision objects and appends them to the list.
-   *
-   * Depending on the value of widthRequired parameter for the given cluster:
-   * <dl>
-   * <li>switches nodes on if number of free nodes is less than widthRequired
-   * <li>switches nodes off otherwise
-   * </dl>
-   *
-   * @param decision
-   *          - the list of decisions
-   * @param onCount
-   *          - number of nodes to power on. If <0 - number of nodes to power
-   *          down.
-   */
-  protected void powerOn(PowerAwareCluster cluster, ArrayList<LocalPowerManagementDecision> decision, int onCount)
+  protected void makePowerDecisions(List<LocalPowerManagementDecision> dlist, int onCount)
   {
     int nCount = 0;
     LocalPowerManagementDecision ld;
@@ -127,21 +77,14 @@ public abstract class TotalRequiredWidthPM implements ClusterPowerManager
       for(Iterator<GNodeGroup> it = cluster.getSMPIterator(); it.hasNext() && nCount < onCount;)
       {
         GNodeGroup ng = it.next();
-
-        boolean groupOk = true;
-        for(GNode nd : ng.getNodes())
-        {
-          PowerAwareNode node = (PowerAwareNode) nd;
-          groupOk = groupOk && node.isSleeping() && canPowerOn(node);
-        }
-        if(groupOk)
+        if(ng.isSleeping())
         {
           ld.addNodes(ng.getNodes());
           nCount += ng.getNodes().size();
         }
       }
       printDebugNodes("on", ld.getNodes().size());
-      decision.add(ld);
+      dlist.add(ld);
     }
 
     // Switch free nodes off
@@ -153,27 +96,33 @@ public abstract class TotalRequiredWidthPM implements ClusterPowerManager
       for(Iterator<GNodeGroup> it = cluster.getSMPIterator(); it.hasNext() && nCount < offCount;)
       {
         GNodeGroup ng = it.next();
-        if(ng.isFree())
+        if(ng.isFree() && canPowerOffGroup(ng))
         {
-          boolean groupOk = true;
-          for(GNode nd : ng.getNodes())
-          {
-            PowerAwareNode node = (PowerAwareNode) nd;
-            groupOk = groupOk && canPowerOff(node);
-          }
-          if(groupOk)
-          {
-            ld.addNodes(ng.getNodes());
-          }
+          ld.addNodes(ng.getNodes());
         }
         nCount += ng.getNodes().size();
       }
       printDebugNodes("off", ld.getNodes().size());
-      decision.add(ld);
+      dlist.add(ld);
     }
   }
 
-  private void printDebugNodes(String message, int nodes)
+  
+  private boolean canPowerOffGroup(GNodeGroup ng)
+  {
+    for(GNode node: ng.getNodes())
+    {
+      if(!canPowerOffNode(node))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  protected abstract boolean canPowerOffNode(GNode node);
+
+  protected void printDebugNodes(String message, int nodes)
   {
     if(cluster.getGanttLogger() != null && nodes > 0)
     {

@@ -98,8 +98,11 @@ public class VisualizerLineCharts extends GroupedChartsVisualizer
       }
     }
 
-    assert (startDate != null);
-
+    if(startDate == null)
+    {
+      startDate = Calendar.getInstance();
+    }
+    
     JFreeChart result = ChartFactory.createXYStepChart(name + " ["
         + DateFormat.getDateTimeInstance().format(startDate.getTime()) + " + "
         + RuntimeUtils.formatTime(startTime) + ", "
@@ -120,11 +123,10 @@ public class VisualizerLineCharts extends GroupedChartsVisualizer
 
     plot.setDomainGridlinesVisible(true);
     plot.getDomainAxis().setRange(startTime, stopTime);
-
+    
     ChartUtilities.writeChartAsPNG(
         new FileOutputStream(new File(resultPath + ".png")), result, getImgWidth(),
         getImgHeight());
-
     monitor.done();
   }
 }

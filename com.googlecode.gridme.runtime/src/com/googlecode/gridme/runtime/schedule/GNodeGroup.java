@@ -24,6 +24,8 @@ package com.googlecode.gridme.runtime.schedule;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.googlecode.gridme.runtime.elements.PowerAwareNode;
+
 /**
  * Cluster node.
  */
@@ -46,6 +48,19 @@ public class GNodeGroup
     for(GNode node : nodes)
     {
       if(!node.isFree())
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public boolean isSleeping()
+  {
+    for(GNode node : nodes)
+    {
+      if( !(node instanceof PowerAwareNode) || 
+          !((PowerAwareNode)node).isSleeping() )
       {
         return false;
       }
