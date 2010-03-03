@@ -242,4 +242,16 @@ public class RuntimeUtils
   {
     return experimentName + "\\.(.+)\\.gstats";
   }
+
+  public static String getRunFilePattern(String experimentName, String runName, List<String> seriePath)
+  {
+    StringBuffer result = new StringBuffer();
+    result.append(experimentName);
+    for(String p: seriePath)
+    {
+      result.append("\\." + p);
+    }
+    result.append("\\." + runName + "\\.gstats");
+    return result.toString();
+  }
 }

@@ -378,13 +378,22 @@ public interface GexperimentPackage extends EPackage
   int RUN_RESULT__NAME = GmodelPackage.NAMED__NAME;
 
   /**
+   * The feature id for the '<em><b>Active</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RUN_RESULT__ACTIVE = GmodelPackage.NAMED_FEATURE_COUNT + 0;
+
+  /**
    * The number of structural features of the '<em>Run Result</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int RUN_RESULT_FEATURE_COUNT = GmodelPackage.NAMED_FEATURE_COUNT + 0;
+  int RUN_RESULT_FEATURE_COUNT = GmodelPackage.NAMED_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link gexperiment.impl.ParameterValueImpl <em>Parameter Value</em>}' class.
@@ -480,6 +489,15 @@ public interface GexperimentPackage extends EPackage
   int SINGLE_RUN_RESULT__NAME = RUN_RESULT__NAME;
 
   /**
+   * The feature id for the '<em><b>Active</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SINGLE_RUN_RESULT__ACTIVE = RUN_RESULT__ACTIVE;
+
+  /**
    * The number of structural features of the '<em>Single Run Result</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -506,6 +524,15 @@ public interface GexperimentPackage extends EPackage
    * @ordered
    */
   int GROUP_RUN_RESULT__NAME = RUN_RESULT__NAME;
+
+  /**
+   * The feature id for the '<em><b>Active</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GROUP_RUN_RESULT__ACTIVE = RUN_RESULT__ACTIVE;
 
   /**
    * The feature id for the '<em><b>Results</b></em>' containment reference list.
@@ -805,6 +832,17 @@ public interface GexperimentPackage extends EPackage
    * @generated
    */
   EClass getRunResult();
+
+  /**
+   * Returns the meta object for the attribute '{@link gexperiment.RunResult#isActive <em>Active</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Active</em>'.
+   * @see gexperiment.RunResult#isActive()
+   * @see #getRunResult()
+   * @generated
+   */
+  EAttribute getRunResult_Active();
 
   /**
    * Returns the meta object for class '{@link gexperiment.ParameterValue <em>Parameter Value</em>}'.
@@ -1132,6 +1170,14 @@ public interface GexperimentPackage extends EPackage
      * @generated
      */
     EClass RUN_RESULT = eINSTANCE.getRunResult();
+
+    /**
+     * The meta object literal for the '<em><b>Active</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute RUN_RESULT__ACTIVE = eINSTANCE.getRunResult_Active();
 
     /**
      * The meta object literal for the '{@link gexperiment.impl.ParameterValueImpl <em>Parameter Value</em>}' class.

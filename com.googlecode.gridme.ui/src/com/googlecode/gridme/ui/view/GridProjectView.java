@@ -124,7 +124,7 @@ public class GridProjectView extends ViewPart
             .currentThread())
         {
           viewer.refresh();
-          viewer.expandAll();
+          //viewer.expandAll();
         }
         else
         {
@@ -138,7 +138,7 @@ public class GridProjectView extends ViewPart
                 return;
               }
               viewer.refresh();
-              viewer.expandAll();
+              //viewer.expandAll();
             }
           });
         }

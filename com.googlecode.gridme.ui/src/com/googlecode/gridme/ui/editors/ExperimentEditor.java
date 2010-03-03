@@ -60,6 +60,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.text.TableView.TableRow;
+
 import org.aspencloud.widgets.ACW;
 import org.aspencloud.widgets.cdatepicker.CDatepickerCombo;
 import org.eclipse.core.resources.IFile;
@@ -79,6 +81,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -187,7 +190,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     @Override
     public String getText()
     {
-      return "Add";
+      return "Add single input";
     }
 
     @Override
@@ -244,12 +247,51 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     }
   }
   
+  class AddInputGroupSeriesAction extends Action
+  {
+    @Override
+    public String getText()
+    {
+      return "Add series";
+    }
+
+    @Override
+    public void run()
+    {
+      List<List<String>> inputs = showInputSeriesSelectionDialog();
+      
+      if(inputs != null)
+      {
+        for(List<String> grp: inputs)
+        {
+          GroupRunResult ginput = GexperimentFactoryImpl.eINSTANCE.createGroupRunResult();
+          
+          for(String item : grp)
+          {
+            SingleRunResult sinput = GexperimentFactoryImpl.eINSTANCE.createSingleRunResult();
+            sinput.setName(item);
+            ginput.getResults().add(sinput);
+          }
+          
+          if(!ginput.getResults().isEmpty())
+          {
+            ginput.setName(ginput.getResults().get(0).getName() + " (group)");
+            selectedVisualizer.getInput().add(ginput);
+            addVisualizerInput(ginput);
+            pageModified();
+          }
+        }
+      }
+    }
+  }
+
+  
   class AddChartAction extends Action
   {
     @Override
     public String getText()
     {
-      return "Add";
+      return "Add chart";
     }
 
     @Override
@@ -1154,6 +1196,78 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     }
   }
 
+  class SeriesInputSelectionDialog extends TrayDialog
+  {
+    SeriesParameter selectedParam;
+    Run selectedRun;
+    
+    protected SeriesInputSelectionDialog(Shell shell)
+    {
+      super(shell);
+    }
+    
+    @Override
+    protected Control createDialogArea(Composite parent)
+    {
+      Composite composite = (Composite) super.createDialogArea(parent);
+      
+      Group g1 = new Group (composite, SWT.NONE);
+      g1.setLayout (new FillLayout());
+      g1.setText("Select run");
+      
+      for(Run run: modelRoot.getRuns())
+      {
+        Button b = new Button(g1, SWT.RADIO);
+        b.setText(run.getName());
+        b.setData(run);
+        
+        b.addListener(SWT.Selection, new Listener()
+        {
+          @Override
+          public void handleEvent(Event event)
+          {
+            selectedRun = (Run) event.widget.getData();
+          }
+        });
+      }
+      
+      Group g2 = new Group (composite, SWT.NONE);
+      g2.setLayout (new FillLayout());
+      g2.setText("Select run serie");
+      
+      for(SeriesParameter sp: modelRoot.getSeries())
+      {
+        Button b = new Button(g2, SWT.RADIO);
+        b.setText(sp.getName());
+        b.setData(sp);
+        
+        b.addListener(SWT.Selection, new Listener()
+        {
+          @Override
+          public void handleEvent(Event event)
+          {
+            selectedParam = (SeriesParameter) event.widget.getData();
+          }
+        });
+      }
+      
+      return composite;
+    }
+
+    @Override
+    protected void okPressed()
+    {
+      if(selectedParam == null || selectedRun == null)
+      {
+        PlatformUtils.showErrorMessage("You must select run and serie.");
+      }
+      else
+      {
+        super.okPressed();
+      }
+    }
+  }
+  
   private Button debugMode;
   private Text descr;
 
@@ -1242,6 +1356,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     }
     
     item.setText(new String[] { input.getName(), groupLabel, params.toString() } );
+    item.setChecked(input.isActive());
   }
 
   private String getExperimentName()
@@ -2787,7 +2902,7 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     dta.horizontalSpan = 7;
     tpan.setLayoutData(dta);
 
-    visualizerInputList = new Table(tpan, SWT.BORDER | SWT.MULTI);
+    visualizerInputList = new Table(tpan, SWT.BORDER | SWT.MULTI | SWT.CHECK);
     visualizerInputList.setLinesVisible(true);
     visualizerInputList.setHeaderVisible(true);
     visualizerInputList.setEnabled(false);
@@ -2820,10 +2935,24 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
         }
         
         manager.add(new AddInputGroupAction());
+        manager.add(new AddInputGroupSeriesAction());
       }
     });
     visualizerInputList.setMenu(popupMenu.createContextMenu(visualizerInputList));
 
+    visualizerInputList.addListener(SWT.Selection, new Listener()
+    {
+      public void handleEvent(Event event)
+      {
+        if(event.detail == SWT.CHECK)
+        {
+          RunResult rr = (RunResult)event.item.getData();
+          rr.setActive(!rr.isActive());
+          pageModified();
+        }
+      }
+    });
+    
     visualizerElementsList = new Table(tpan, SWT.BORDER | SWT.MULTI);
     visualizerElementsList.setLinesVisible(true);
     visualizerElementsList.setHeaderVisible(true);
@@ -3002,6 +3131,11 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     final ArrayList<LogEntry> logList = new ArrayList<LogEntry>();
     for(RunResult res : visual.getInput())
     {
+      if(!res.isActive())
+      {
+        continue;
+      }
+      
       List<LogAnalyser> logs = new ArrayList<LogAnalyser>();
       if(res instanceof GroupRunResult)
       {
@@ -3299,6 +3433,60 @@ public class ExperimentEditor extends MultiPageEditorPart implements ModifyListe
     if(dlg.open() == Window.OK && dlg.getResult() != null)
     {
       return dlg.getResult();
+    }
+    return null;
+  }
+  
+  public List<List<String>> showInputSeriesSelectionDialog()
+  {
+    SeriesInputSelectionDialog dialog = new SeriesInputSelectionDialog(visualizerInputList.getShell());
+    
+    if(dialog.open() == Window.OK && dialog.selectedParam != null && dialog.selectedRun != null)
+    {
+      SeriesParameter spar = dialog.selectedParam;
+      String[] allInputs = getAvailableInputs();
+      ArrayList<List<String>> result = new ArrayList<List<String>>();
+      
+      for(int i=1; i < spar.getValues().size() + 1; i++)
+      {
+        ArrayList<String> groupInputs = new ArrayList<String>();
+        ArrayList<String> paramPath = new ArrayList<String>();
+        for(SeriesParameter sp: modelRoot.getSeries())
+        {
+          if(sp.equals(spar))
+          {
+            paramPath.add("" + i);
+          }
+          else
+          {
+            paramPath.add("\\d+");
+          }
+        }
+        Pattern pat = Pattern.compile(RuntimeUtils.getRunFilePattern(getExperimentName(), dialog.selectedRun.getName(), paramPath));
+        
+        for(String inp: allInputs)
+        {
+          Matcher match = pat.matcher(inp);
+          if(match.matches())
+          {
+            groupInputs.add(inp);
+          }
+        }
+        
+        if(!groupInputs.isEmpty())
+        {
+          result.add(groupInputs);
+        }
+      }
+      
+      if(!result.isEmpty())
+      {
+        return result;
+      }
+      else
+      {
+        PlatformUtils.showErrorMessage("Nothing added");
+      }
     }
     return null;
   }

@@ -453,6 +453,16 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getRunResult_Active()
+  {
+    return (EAttribute)runResultEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getParameterValue()
   {
     return parameterValueEClass;
@@ -597,6 +607,7 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     createEAttribute(chartEClass, CHART__METRIC);
 
     runResultEClass = createEClass(RUN_RESULT);
+    createEAttribute(runResultEClass, RUN_RESULT__ACTIVE);
 
     parameterValueEClass = createEClass(PARAMETER_VALUE);
     createEReference(parameterValueEClass, PARAMETER_VALUE__ELEMENTS);
@@ -683,6 +694,7 @@ public class GexperimentPackageImpl extends EPackageImpl implements GexperimentP
     initEAttribute(getChart_Metric(), ecorePackage.getEString(), "metric", null, 1, 1, Chart.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(runResultEClass, RunResult.class, "RunResult", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getRunResult_Active(), ecorePackage.getEBoolean(), "active", "true", 1, 1, RunResult.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(parameterValueEClass, ParameterValue.class, "ParameterValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getParameterValue_Elements(), theGmodelPackage.getModelElement(), null, "elements", null, 1, -1, ParameterValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

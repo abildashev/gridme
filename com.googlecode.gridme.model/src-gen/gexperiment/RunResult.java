@@ -34,6 +34,12 @@ import gmodel.Named;
  * A representation of the model object '<em><b>Run Result</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * <ul>
+ *   <li>{@link gexperiment.RunResult#isActive <em>Active</em>}</li>
+ * </ul>
+ * </p>
  *
  * @see gexperiment.GexperimentPackage#getRunResult()
  * @model abstract="true"
@@ -41,4 +47,31 @@ import gmodel.Named;
  */
 public interface RunResult extends Named
 {
+
+  /**
+   * Returns the value of the '<em><b>Active</b></em>' attribute.
+   * The default value is <code>"true"</code>.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Active</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Active</em>' attribute.
+   * @see #setActive(boolean)
+   * @see gexperiment.GexperimentPackage#getRunResult_Active()
+   * @model default="true" required="true"
+   * @generated
+   */
+  boolean isActive();
+
+  /**
+   * Sets the value of the '{@link gexperiment.RunResult#isActive <em>Active</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Active</em>' attribute.
+   * @see #isActive()
+   * @generated
+   */
+  void setActive(boolean value);
 } // RunResult
